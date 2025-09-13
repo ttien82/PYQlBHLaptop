@@ -1,0 +1,245 @@
+-- Ngắt tất cả kết nối 
+ALTER DATABASE QuanLyBanLaptopPY
+SET SINGLE_USER
+WITH ROLLBACK IMMEDIATE;
+GO
+-- xóa 
+DROP DATABASE QuanLyBanLaptopPY;
+GO
+
+-- Tạo cơ sở dữ liệu mới
+CREATE DATABASE QuanLyBanLaptopPY;
+GO
+
+USE QuanLyBanLaptopPY;
+GO
+
+-- Bảng LoaiSP
+CREATE TABLE LoaiSP (
+    MaLoaiSP VARCHAR(20) PRIMARY KEY,
+    TenLoaiSP NVARCHAR(100) NOT NULL
+);
+
+-- Bảng NhaCungCap
+CREATE TABLE NhaCungCap (
+    MaNCC VARCHAR(20) PRIMARY KEY,
+    TenNCC NVARCHAR(255) NOT NULL,
+    DiaChi NVARCHAR(255),
+    DienThoai VARCHAR(15)
+);
+
+-- Bảng SanPham
+CREATE TABLE SanPham (
+    MaSP VARCHAR(20) PRIMARY KEY,
+    TenSP NVARCHAR(255) NOT NULL,
+    MaNCC VARCHAR(20) NOT NULL,
+    MaLoaiSP VARCHAR(20) NOT NULL,
+    CPU NVARCHAR(100),
+    Ram NVARCHAR(50),
+    OCung NVARCHAR(50),
+    CardManHinh NVARCHAR(100),
+    GiaBan DECIMAL(18, 2) NOT NULL,
+    SoLuongTon INT NOT NULL DEFAULT 0,
+    HinhAnh VARCHAR(255),
+    
+    FOREIGN KEY (MaNCC) REFERENCES NhaCungCap(MaNCC),
+    FOREIGN KEY (MaLoaiSP) REFERENCES LoaiSP(MaLoaiSP),
+    CONSTRAINT CHK_GiaBan CHECK (GiaBan >= 0),
+    CONSTRAINT CHK_SoLuongTon CHECK (SoLuongTon >= 0)
+);
+
+-- Bảng KhachHang
+CREATE TABLE KhachHang (
+    MaKH VARCHAR(20) PRIMARY KEY,
+    TenKH NVARCHAR(255) NOT NULL,
+    DienThoai VARCHAR(15),
+    Email VARCHAR(255),
+    DiaChi NVARCHAR(255)
+);
+
+-- Bảng Quyen
+CREATE TABLE Quyen (
+    MaQuyen VARCHAR(20) PRIMARY KEY,
+    TenQuyen NVARCHAR(50) NOT NULL
+);
+
+-- Bảng NhanVien
+CREATE TABLE NhanVien (
+    MaNV VARCHAR(20) PRIMARY KEY,
+    TenNV NVARCHAR(255) NOT NULL,
+    DiaChi NVARCHAR(255),
+    DienThoai VARCHAR(15)
+);
+
+-- Bảng TaiKhoan
+CREATE TABLE TaiKhoan (
+    MaTK VARCHAR(20) PRIMARY KEY,
+    MaNV VARCHAR(20) UNIQUE NULL,
+    MaKH VARCHAR(20) UNIQUE NULL,
+    TenDangNhap VARCHAR(50) UNIQUE NOT NULL,
+    MatKhau VARCHAR(255) NOT NULL,
+    MaQuyen VARCHAR(20) NOT NULL,
+    
+    FOREIGN KEY (MaNV) REFERENCES NhanVien(MaNV),
+    FOREIGN KEY (MaKH) REFERENCES KhachHang(MaKH),
+    FOREIGN KEY (MaQuyen) REFERENCES Quyen(MaQuyen),
+    CONSTRAINT CK_TaiKhoan_NhanVien_KhachHang CHECK (
+    (MaNV IS NOT NULL AND MaKH IS NULL) OR
+    (MaKH IS NOT NULL AND MaNV IS NULL)
+    )
+);
+
+
+-- Bảng DonHang
+CREATE TABLE DonHang (
+    MaDH VARCHAR(20) PRIMARY KEY,
+    MaKH VARCHAR(20),
+    MaNV VARCHAR(20) NOT NULL,
+    NgayLap DATETIME NOT NULL DEFAULT GETDATE(),
+    TongTien DECIMAL(18, 2) NOT NULL,
+    TrangThai NVARCHAR(50) NOT NULL,
+    
+    FOREIGN KEY (MaKH) REFERENCES KhachHang(MaKH),
+    FOREIGN KEY (MaNV) REFERENCES NhanVien(MaNV),
+    CONSTRAINT CHK_TongTienDH CHECK (TongTien >= 0)
+);
+
+-- Bảng ChiTietDonHang
+CREATE TABLE ChiTietDonHang (
+    MaDH VARCHAR(20) NOT NULL,
+    MaSP VARCHAR(20) NOT NULL,
+    SoLuong INT NOT NULL,
+    DonGia DECIMAL(18, 2) NOT NULL,
+    
+    PRIMARY KEY (MaDH, MaSP),
+    FOREIGN KEY (MaDH) REFERENCES DonHang(MaDH),
+    FOREIGN KEY (MaSP) REFERENCES SanPham(MaSP),
+    CONSTRAINT CHK_SoLuongBan CHECK (SoLuong > 0),
+    CONSTRAINT CHK_DonGiaBan CHECK (DonGia >= 0)
+);
+
+-- Bảng PhieuNhap
+CREATE TABLE PhieuNhap (
+    MaPN VARCHAR(20) PRIMARY KEY,
+    MaNCC VARCHAR(20) NOT NULL,
+    MaNV VARCHAR(20) NOT NULL,
+    NgayNhap DATETIME NOT NULL DEFAULT GETDATE(),
+    TongTien DECIMAL(18, 2) NOT NULL,
+    
+    FOREIGN KEY (MaNCC) REFERENCES NhaCungCap(MaNCC),
+    FOREIGN KEY (MaNV) REFERENCES NhanVien(MaNV),
+    CONSTRAINT CHK_TongTienPN CHECK (TongTien >= 0)
+);
+
+-- Bảng ChiTietPhieuNhap
+CREATE TABLE ChiTietPhieuNhap (
+    MaPN VARCHAR(20) NOT NULL,
+    MaSP VARCHAR(20) NOT NULL,
+    SoLuong INT NOT NULL,
+    GiaNhap DECIMAL(18, 2) NOT NULL,
+    
+    PRIMARY KEY (MaPN, MaSP),
+    FOREIGN KEY (MaPN) REFERENCES PhieuNhap(MaPN),
+    FOREIGN KEY (MaSP) REFERENCES SanPham(MaSP),
+    CONSTRAINT CHK_SoLuongNhap CHECK (SoLuong > 0),
+    CONSTRAINT CHK_GiaNhap CHECK (GiaNhap >= 0)
+);
+
+-- Thêm dữ liệu vào bảng LoaiSP
+INSERT INTO LoaiSP (MaLoaiSP, TenLoaiSP) VALUES
+('LTGAMING', N'Laptop Gaming'),
+('LTOFFICE', N'Laptop Văn phòng'),
+('LTDOHOA', N'Laptop Đồ họa'),
+('LTCANHAN', N'Laptop Cá nhân');
+
+-- Thêm dữ liệu vào bảng NhaCungCap
+INSERT INTO NhaCungCap (MaNCC, TenNCC, DiaChi, DienThoai) VALUES
+('NC001', N'Công ty TNHH Laptop An Phát', N'123 Lê Duẩn, TP.HCM', '0901234567'),
+('NC002', N'Nhà phân phối Hoàng Long', N'456 Trần Hưng Đạo, Hà Nội', '0987654321'),
+('NC003', N'Đại lý Laptop FPT', N'789 Nguyễn Trãi, Đà Nẵng', '0912345678');
+
+-- Thêm dữ liệu vào bảng SanPham
+INSERT INTO SanPham (MaSP, TenSP, MaNCC, MaLoaiSP, CPU, Ram, OCung, CardManHinh, GiaBan, SoLuongTon, HinhAnh) VALUES
+('SP001', N'ASUS ROG Strix G15', 'NC001', 'LTGAMING', 'Intel Core i7', '16GB', '512GB SSD', 'NVIDIA RTX 3060', 35000000.00, 15, 'asus_g15.jpg'),
+('SP002', N'Dell XPS 13', 'NC002', 'LTOFFICE', 'Intel Core i5', '8GB', '256GB SSD', 'Intel Iris Xe Graphics', 28000000.00, 20, 'dell_xps13.jpg'),
+('SP003', N'MacBook Pro M1', 'NC003', 'LTDOHOA', 'Apple M1', '16GB', '512GB SSD', 'Apple M1 GPU', 45000000.00, 10, 'macbook_pro.jpg'),
+('SP004', N'Lenovo IdeaPad 5', 'NC002', 'LTCANHAN', 'AMD Ryzen 5', '8GB', '512GB SSD', 'AMD Radeon Graphics', 15500000.00, 30, 'lenovo_ideapad.jpg'),
+('SP005', N'HP Spectre x360', 'NC001', 'LTOFFICE', 'Intel Core i7', '16GB', '1TB SSD', 'Intel Iris Xe Graphics', 32000000.00, 8, 'hp_spectre.jpg');
+
+-- Thêm dữ liệu vào bảng KhachHang
+INSERT INTO KhachHang (MaKH, TenKH, DienThoai, Email, DiaChi) VALUES
+('KH001', N'Nguyễn Văn A', '0901112233', 'nguyenvana@gmail.com', N'101 Nguyễn Văn Cừ, Quận 5'),
+('KH002', N'Trần Thị B', '0988776655', 'tranthib@yahoo.com', N'202 Lê Lợi, Quận 1'),
+('KH003', N'Lê Văn C', '0912345678', 'levanc@hotmail.com', N'303 Cách Mạng Tháng Tám, Quận 3');
+
+-- Thêm dữ liệu vào bảng NhanVien
+INSERT INTO NhanVien (MaNV, TenNV, DiaChi, DienThoai) VALUES
+('NV001', N'Mai Thị D', N'404 Võ Văn Tần, Quận 3', '0909998877'),
+('NV002', N'Phạm Văn E', N'505 Lý Thường Kiệt, Quận 10', '0977665544'),
+('NV003', N'Đỗ Thị F', N'606 Trần Phú, Quận 5', '0966554433');
+
+-- Thêm dữ liệu vào bảng Quyen
+INSERT INTO Quyen (MaQuyen, TenQuyen) VALUES
+('ADMIN', N'Quản trị viên'),
+('MANAGER', N'Quản lý'),
+('STAFF', N'Nhân viên bán hàng'),
+('CUSTOMER', N'Khách hàng');
+
+-- Thêm dữ liệu vào bảng TaiKhoan
+-- Nhân viên
+INSERT INTO TaiKhoan (MaTK, MaNV, MaKH, TenDangNhap, MatKhau, MaQuyen) VALUES
+('TK001', 'NV001', NULL, 'maid', 'matkhau123', 'ADMIN'),
+('TK002', 'NV002', NULL, 'phame', 'matkhau456', 'MANAGER'),
+('TK003', 'NV003', NULL, 'dof', 'matkhau789', 'STAFF');
+
+-- Khách hàng
+INSERT INTO TaiKhoan (MaTK, MaNV, MaKH, TenDangNhap, MatKhau, MaQuyen) VALUES
+('TK004', NULL, 'KH001', 'ttien', 'matkhau789', 'CUSTOMER');
+
+
+-- Thêm dữ liệu vào bảng DonHang
+INSERT INTO DonHang (MaDH, MaKH, MaNV, NgayLap, TongTien, TrangThai) VALUES
+('DH001', 'KH001', 'NV003', GETDATE(), 35000000.00, N'Đã thanh toán'),
+('DH002', 'KH002', 'NV003', GETDATE(), 28000000.00, N'Đã thanh toán');
+
+-- Thêm dữ liệu vào bảng ChiTietDonHang
+INSERT INTO ChiTietDonHang (MaDH, MaSP, SoLuong, DonGia) VALUES
+('DH001', 'SP001', 1, 35000000.00),
+('DH002', 'SP002', 1, 28000000.00);
+
+-- Thêm dữ liệu vào bảng PhieuNhap
+INSERT INTO PhieuNhap (MaPN, MaNCC, MaNV, NgayNhap, TongTien) VALUES
+('PN001', 'NC001', 'NV002', GETDATE(), 60000000.00),
+('PN002', 'NC002', 'NV002', GETDATE(), 30000000.00);
+
+-- Thêm dữ liệu vào bảng ChiTietPhieuNhap
+INSERT INTO ChiTietPhieuNhap (MaPN, MaSP, SoLuong, GiaNhap) VALUES
+('PN001', 'SP001', 2, 30000000.00),
+('PN002', 'SP002', 1, 20000000.00),
+('PN002', 'SP004', 1, 10000000.00);
+
+-- Xem dữ liệu đã thêm 
+
+SELECT * FROM LoaiSP;
+
+SELECT * FROM NhaCungCap;
+
+SELECT * FROM SanPham;
+
+SELECT * FROM KhachHang;
+
+SELECT * FROM NhanVien;
+
+SELECT * FROM Quyen;
+
+SELECT * FROM TaiKhoan;
+
+SELECT * FROM DonHang;
+
+SELECT * FROM ChiTietDonHang;
+
+SELECT * FROM PhieuNhap;
+
+SELECT * FROM ChiTietPhieuNhap;
+
+

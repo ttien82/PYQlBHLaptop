@@ -1,0 +1,14 @@
+python manage.py runserver
+
+pip install django-mssql-backend pyodbc
+
+http://127.0.0.1:8000/
+
+
+
+python manage.py startapp TaiKhoan 
+python manage.py startapp SanPham 
+python manage.py startapp HoaDon 
+python manage.py startapp PhieuNhap
+
+https://github.com/ttien82/PYQlBHLaptop.git
