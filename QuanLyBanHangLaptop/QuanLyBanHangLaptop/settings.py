@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
 # app
+    'rest_framework',
     'TaiKhoan',
     'SanPham',
     'HoaDon',
@@ -84,19 +85,18 @@ DATABASES = {
     #     'NAME': BASE_DIR / 'db.sqlite3',
     # }
 
-'default': {
-        'ENGINE': 'mssql',
-        'NAME': 'QuanLyBanLaptopPY',                        # tên database bạn đã tạo trong SQL
-        'USER': 'sa',                                       # user đăng nhập SQL Server
-        'PASSWORD': '123456',                               # password SQL Server
-        'HOST': 'DESKTOP-IKTE16D\SQLEXPRESS',               # server
-        'PORT': '1433',                                     # port mặc định SQL Server
-        'OPTIONS': {
+ 'default': {
+            'ENGINE': 'mssql',
+            'NAME': 'QuanLyBanLaptopPY',                        # tên database đã tạo trong SQL
+            'USER': 'sa',                                       # user đăng nhập SQL Server
+            'PASSWORD': '123456',                               # password SQL Server
+            'HOST': 'DESKTOP-IKTE16D\\SQLEXPRESS',               # server
+            'PORT': '1433',                                     # port mặc định SQL Server
+            'OPTIONS': {
             'driver': 'ODBC Driver 17 for SQL Server',
-        },
-    }
+            },
+     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -115,7 +115,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
@@ -138,3 +137,5 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'TaiKhoan.TaiKhoan'

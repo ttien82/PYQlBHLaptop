@@ -73,20 +73,27 @@ CREATE TABLE NhanVien (
 
 -- Bảng TaiKhoan
 CREATE TABLE TaiKhoan (
-    MaTK VARCHAR(20) PRIMARY KEY,
-    MaNV VARCHAR(20) UNIQUE NULL,
-    MaKH VARCHAR(20) UNIQUE NULL,
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    MaTK VARCHAR(20) UNIQUE NOT NULL,
+    MaNV VARCHAR(20) NULL,
+    MaKH VARCHAR(20) NULL,
     TenDangNhap VARCHAR(50) UNIQUE NOT NULL,
-    MatKhau VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
     MaQuyen VARCHAR(20) NOT NULL,
+    last_login DATETIME,
+    is_active BIT NOT NULL DEFAULT 1,
+    is_staff BIT NOT NULL DEFAULT 0,
+    is_superuser BIT NOT NULL DEFAULT 0,
     
     FOREIGN KEY (MaNV) REFERENCES NhanVien(MaNV),
     FOREIGN KEY (MaKH) REFERENCES KhachHang(MaKH),
     FOREIGN KEY (MaQuyen) REFERENCES Quyen(MaQuyen),
     CONSTRAINT CK_TaiKhoan_NhanVien_KhachHang CHECK (
     (MaNV IS NOT NULL AND MaKH IS NULL) OR
-    (MaKH IS NOT NULL AND MaNV IS NULL)
+    (MaKH IS NOT NULL AND MaNV IS NULL) OR
+    (MaNV IS NULL AND MaKH IS NULL AND is_superuser = 1)
     )
+
 );
 
 
@@ -187,14 +194,14 @@ INSERT INTO Quyen (MaQuyen, TenQuyen) VALUES
 
 -- Thêm dữ liệu vào bảng TaiKhoan
 -- Nhân viên
-INSERT INTO TaiKhoan (MaTK, MaNV, MaKH, TenDangNhap, MatKhau, MaQuyen) VALUES
-('TK001', 'NV001', NULL, 'maid', 'matkhau123', 'ADMIN'),
-('TK002', 'NV002', NULL, 'phame', 'matkhau456', 'MANAGER'),
-('TK003', 'NV003', NULL, 'dof', 'matkhau789', 'STAFF');
+INSERT INTO TaiKhoan (MaTK, MaNV, MaKH, TenDangNhap, password, MaQuyen, is_superuser) VALUES
+('TK001', 'NV001', NULL, 'maid', 'pbkdf2_sha256$600000$W3PgD4pQmF3vLxvYjIUcA7$W+ouLKbz3ch8WxPhv6mA9zAvZsDScL9ivEQhL2wt7vA=', 'ADMIN', 1),
+('TK002', 'NV002', NULL, 'phame', 'pbkdf2_sha256$600000$zojq9Qhtf0AFeRCSPJvRk1$K1B5R6dW+KH+NNgqz5PzC1GTH39dW3m0xFl9G/6Z7HY=', 'MANAGER', 0),
+('TK003', 'NV003', NULL, 'dof',   'pbkdf2_sha256$600000$1tVMCyH6RZcv70T3P6LdnO$WnqCG7ECFbFwfxi8xgnPM9UbMqpCwaCDNndCtF6G5l8=', 'STAFF', 0);
 
 -- Khách hàng
-INSERT INTO TaiKhoan (MaTK, MaNV, MaKH, TenDangNhap, MatKhau, MaQuyen) VALUES
-('TK004', NULL, 'KH001', 'ttien', 'matkhau789', 'CUSTOMER');
+INSERT INTO TaiKhoan (MaTK, MaNV, MaKH, TenDangNhap, password, MaQuyen, is_superuser) VALUES
+('TK004', NULL, 'KH001', 'ttien', 'pbkdf2_sha256$600000$YdJ5O4mTWuSlkP9T9P53Xy$gD1vdj8T84kW09dFf2q6E8wzB9nVbOCCx4YwJvKrDyA=', 'CUSTOMER', 0);
 
 
 -- Thêm dữ liệu vào bảng DonHang

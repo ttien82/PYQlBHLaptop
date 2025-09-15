@@ -12,3 +12,35 @@ python manage.py startapp HoaDon
 python manage.py startapp PhieuNhap
 
 https://github.com/ttien82/PYQlBHLaptop.git
+
+api_get_ds_nv
+
+python manage.py inspectdb
+
+pip install django djangorestframework pyodbc
+
+python manage.py makemigrations TaiKhoan
+
+python manage.py migrate
+
+python manage.py makemigrations TaiKhoan
+python manage.py makemigrations SanPham
+python manage.py makemigrations HoaDon
+python manage.py makemigrations PhieuNhap
+
+python manage.py migrate --fake-initial
+
+python manage.py createsuperuser
+
+PS D:\Python\QuanLyBanHangLaptop> python manage.py createsuperuser
+TenDangNhap: ttien82
+MaTK: TK005
+MaQuyen (Quyen.MaQuyen): ADMIN
+Password:123
+Password (again):
+This password is too short. It must contain at least 8 characters.
+This password is too common.
+This password is entirely numeric.
+Bypass password validation and create user anyway? [y/N]: y
+Superuser created successfully.
+PS D:\Python\QuanLyBanHangLaptop> 
