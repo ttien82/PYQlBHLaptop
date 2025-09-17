@@ -17,3 +17,4 @@ urlpatterns = [
     path('ncc/them/', views.them_ncc, name='them_ncc'),
     path('ncc/sua/<str:pk>/', views.sua_ncc, name='sua_ncc'),
 ]
+

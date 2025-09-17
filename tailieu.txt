@@ -44,3 +44,12 @@ This password is entirely numeric.
 Bypass password validation and create user anyway? [y/N]: y
 Superuser created successfully.
 PS D:\Python\QuanLyBanHangLaptop> 
+
+python manage.py shell
+
+from django.contrib.sessions.models import Session
+from django.contrib.auth.models import User
+
+# Lấy session gần nhất
+s = Session.objects.last()
+print(s.session_key)
