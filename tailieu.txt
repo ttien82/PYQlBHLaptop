@@ -43,4 +43,20 @@ This password is too common.
 This password is entirely numeric.
 Bypass password validation and create user anyway? [y/N]: y
 Superuser created successfully.
-PS D:\Python\QuanLyBanHangLaptop> 
+PS D:\Python\QuanLyBanHangLaptop>
+
+Đường dẫn app Sản Phẩm
+Xem - Sản phẩm - GET: http://127.0.0.1:8000/api/sanpham/
+Thêm - Sản phẩm - POST: http://127.0.0.1:8000/api/sanpham/them/
+Sửa - Sản phẩm - PUT: http://127.0.0.1:8000/api/sanpham/sua/
+Xóa - Sản phẩm - DELETE: http://127.0.0.1:8000/api/sanpham/xoa/
+
+Xem - Loại SP - GET: http://127.0.0.1:8000/api/sanpham/loaisp/
+Thêm - Loại SP - POST: http://127.0.0.1:8000/api/sanpham/loaisp/them/
+Sửa - Loại SP - PUT: http://127.0.0.1:8000/api/sanpham/loaisp/sua/
+Xóa - Loại SP - DELETE: http://127.0.0.1:8000/api/sanpham/loaisp/xoa/
+
+Xem - Nhà cung cấp -GET: http://127.0.0.1:8000/api/sanpham/ncc/
+Thêm - Loại SP - POST: http://127.0.0.1:8000/api/sanpham/ncc/them/
+Sửa - Loại SP - PUT: http://127.0.0.1:8000/api/sanpham/ncc/sua/
+Xóa - Loại SP - DELETE: http://127.0.0.1:8000/api/sanpham/ncc/xoa/
