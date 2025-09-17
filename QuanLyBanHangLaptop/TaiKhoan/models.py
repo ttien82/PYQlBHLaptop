@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
+import TaiKhoan
+
+
 # model cho bảng Quyền
 class Quyen(models.Model):
     MaQuyen = models.CharField(max_length=20, primary_key=True)
@@ -61,7 +64,7 @@ class TaiKhoanManager(BaseUserManager):
         """Tạo tài khoản thường"""
         if not TenDangNhap:
             raise ValueError('Tên đăng nhập không được để trống')
-        user = self.model(TenDangNhap = TenDangNhap, **extra_fields)
+        user = self.model(TenDangNhap=TenDangNhap, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
@@ -90,13 +93,35 @@ class TaiKhoan(AbstractBaseUser, PermissionsMixin ):
     MaNV = models.ForeignKey(NhanVien, on_delete=models.SET_NULL, null=True, blank=True, db_column='MaNV')
     MaKH = models.ForeignKey(KhachHang, on_delete=models.SET_NULL, null=True, blank=True,db_column='MaKH')
     MaQuyen = models.ForeignKey(Quyen, on_delete=models.SET_NULL, null=True, blank=True,db_column='MaQuyen')
+    #TenQuyen = models.CharField(max_length=50,db_column='TenQuyen')
+
+    # Tắt Many to Many của  PermissionsMixin
+
+    groups = None
+    user_permissions = None
 
     #Django auth
+    last_login = models.DateTimeField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=True)
+    is_superuser = models.BooleanField(default=False)
+
+    #groups = models.ManyToManyField('auth.Group', related_name='tai_khoan_groups', blank=True)
+    #user_permissions = models.ManyToManyField('auth.Permission', related_name='tai_khoan_permissions', blank=True)
 
     USERNAME_FIELD = 'TenDangNhap'
     REQUIRED_FIELDS = ['MaTK', 'MaQuyen']
+
+    def has_perms(self, perm, obj = None):
+        if self.is_superuser:
+            return True
+        return False
+
+    def has_module_perms(self, app_label):
+        if self.is_superuser:
+            return True
+        return False
+
 
     objects = TaiKhoanManager()
 
@@ -116,8 +141,8 @@ class TaiKhoan(AbstractBaseUser, PermissionsMixin ):
                 name = 'CK_TaiKhoan_MaNV_MaKH'
             )
         ]
-    def has_perm(self, perm, obj=None):
-        return self.is_superuser
+    #def has_perm(self, perm, obj=None):
+        #return self.is_superuser
 
-    def has_module_perms(self, app_label):
-        return self.is_superuser
+    #def has_module_perms(self, app_label):
+        #return self.is_superuser
