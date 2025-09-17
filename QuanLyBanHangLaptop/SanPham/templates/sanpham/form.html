@@ -1,0 +1,118 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ title }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        /* Giảm khoảng cách giữa các nhóm input */
+        .form-group, .mb-3, .row.mb-3 {
+            margin-bottom: 0.5rem !important; /* thay vì 1rem mặc định */
+        }
+
+        /* Giảm chiều cao ô input */
+        .form-control, .form-select {
+            padding: 0.25rem 0.5rem;   /* nhỏ hơn mặc định */
+            font-size: 0.9rem;        /* chữ nhỏ gọn hơn */
+        }
+
+        /* Label cũng nhỏ lại để cân đối */
+        .form-label {
+            margin-bottom: 0.2rem;
+            font-size: 0.9rem;
+        }
+
+        /* Nút bấm nhỏ hơn */
+        .btn {
+            padding: 0.4rem 0.75rem;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+<div class="container mt-2">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white text-center py-2">
+                    <h5 class="mb-0">{{ title }}</h5>
+                </div>
+                <div class="card-body p-3">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <div class="row mb-2">
+                            <div class="col-md-6">
+                                <label class="form-label">Mã sản phẩm</label>
+                                {{ form.MaSP }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Loại sản phẩm</label>
+                                {{ form.MaLoaiSP }}
+                            </div>
+                        </div>
+
+                        <div class="mb-2">
+                            <label class="form-label">Tên sản phẩm</label>
+                            {{ form.TenSP }}
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-md-6">
+                                <label class="form-label">Nhà cung cấp</label>
+                                {{ form.MaNCC }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Số lượng tồn</label>
+                                {{ form.SoLuongTon }}
+                            </div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-md-6">
+                                <label class="form-label">CPU</label>
+                                {{ form.CPU }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">RAM</label>
+                                {{ form.RAM }}
+                            </div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-md-6">
+                                <label class="form-label">Ổ cứng</label>
+                                {{ form.OCung }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Card màn hình</label>
+                                {{ form.CardManHinh }}
+                            </div>
+                        </div>
+
+                        <div class="mb-2">
+                            <label class="form-label">Giá bán</label>
+                            {{ form.GiaBan }}
+                        </div>
+
+                        <div class="mb-2">
+                            <label class="form-label">Hình ảnh sản phẩm</label>
+                            {{ form.HinhAnh }}
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-3">
+                            <a href="{% url 'danh_sach_san_pham' %}" class="btn btn-secondary w-50 me-2">Quay lại</a>
+                            <button type="submit" class="btn btn-success w-50">Lưu</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

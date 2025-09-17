@@ -39,8 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
 # app
+
     'rest_framework',
     'QuanLyBanHangLaptop',
+
     'TaiKhoan',
     'SanPham',
     'HoaDon',
@@ -101,7 +103,7 @@ DATABASES = {
             'NAME': 'QuanLyBanLaptopPY',                        # tên database đã tạo trong SQL
             'USER': 'sa',                                       # user đăng nhập SQL Server
             'PASSWORD': '123456',                               # password SQL Server
-            'HOST': 'DESKTOP-IKTE16D\\SQLEXPRESS',               # server
+            'HOST': '127.0.0.1,1433',               # server
             'PORT': '1433',                                     # port mặc định SQL Server
             'OPTIONS': {
             'driver': 'ODBC Driver 17 for SQL Server',
