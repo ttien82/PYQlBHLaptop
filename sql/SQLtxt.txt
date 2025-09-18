@@ -41,6 +41,9 @@ CREATE TABLE SanPham (
     GiaBan DECIMAL(18, 2) NOT NULL,
     SoLuongTon INT NOT NULL DEFAULT 0,
     HinhAnh VARCHAR(255),
+    GiaNhap decimal(18, 2) NULL,
+	Thue int NOT NULL,
+	LaiGop decimal(18, 2) NULL,
     
     FOREIGN KEY (MaNCC) REFERENCES NhaCungCap(MaNCC),
     FOREIGN KEY (MaLoaiSP) REFERENCES LoaiSP(MaLoaiSP),
@@ -144,8 +147,8 @@ CREATE TABLE ChiTietPhieuNhap (
     MaSP VARCHAR(20) NOT NULL,
     SoLuong INT NOT NULL,
     GiaNhap DECIMAL(18, 2) NOT NULL,
-    
-    PRIMARY KEY (MaPN, MaSP),
+    MaCTPN INT IDENTITY(1,1) NOT NULL PRIMARY KEY
+
     FOREIGN KEY (MaPN) REFERENCES PhieuNhap(MaPN),
     FOREIGN KEY (MaSP) REFERENCES SanPham(MaSP),
     CONSTRAINT CHK_SoLuongNhap CHECK (SoLuong > 0),
@@ -166,12 +169,12 @@ INSERT INTO NhaCungCap (MaNCC, TenNCC, DiaChi, DienThoai) VALUES
 ('NC003', N'Đại lý Laptop FPT', N'789 Nguyễn Trãi, Đà Nẵng', '0912345678');
 
 -- Thêm dữ liệu vào bảng SanPham
-INSERT INTO SanPham (MaSP, TenSP, MaNCC, MaLoaiSP, CPU, Ram, OCung, CardManHinh, GiaBan, SoLuongTon, HinhAnh) VALUES
-('SP001', N'ASUS ROG Strix G15', 'NC001', 'LTGAMING', 'Intel Core i7', '16GB', '512GB SSD', 'NVIDIA RTX 3060', 35000000.00, 15, 'asus_g15.jpg'),
-('SP002', N'Dell XPS 13', 'NC002', 'LTOFFICE', 'Intel Core i5', '8GB', '256GB SSD', 'Intel Iris Xe Graphics', 28000000.00, 20, 'dell_xps13.jpg'),
-('SP003', N'MacBook Pro M1', 'NC003', 'LTDOHOA', 'Apple M1', '16GB', '512GB SSD', 'Apple M1 GPU', 45000000.00, 10, 'macbook_pro.jpg'),
-('SP004', N'Lenovo IdeaPad 5', 'NC002', 'LTCANHAN', 'AMD Ryzen 5', '8GB', '512GB SSD', 'AMD Radeon Graphics', 15500000.00, 30, 'lenovo_ideapad.jpg'),
-('SP005', N'HP Spectre x360', 'NC001', 'LTOFFICE', 'Intel Core i7', '16GB', '1TB SSD', 'Intel Iris Xe Graphics', 32000000.00, 8, 'hp_spectre.jpg');
+INSERT INTO SanPham (MaSP, TenSP, MaNCC, MaLoaiSP, CPU, Ram, OCung, CardManHinh, GiaBan, SoLuongTon, HinhAnh, GiaNhap, Thue, LaiGop) VALUES
+('SP001', N'ASUS ROG Strix G15', 'NC001', 'LTGAMING', 'Intel Core i7', '16GB', '512GB SSD', 'NVIDIA RTX 3060', 35000000.00, 15, 'asus_g15.jpg',0,0,0),
+('SP002', N'Dell XPS 13', 'NC002', 'LTOFFICE', 'Intel Core i5', '8GB', '256GB SSD', 'Intel Iris Xe Graphics', 28000000.00, 20, 'dell_xps13.jpg',0,0,0),
+('SP003', N'MacBook Pro M1', 'NC003', 'LTDOHOA', 'Apple M1', '16GB', '512GB SSD', 'Apple M1 GPU', 45000000.00, 10, 'macbook_pro.jpg',0,0,0),
+('SP004', N'Lenovo IdeaPad 5', 'NC002', 'LTCANHAN', 'AMD Ryzen 5', '8GB', '512GB SSD', 'AMD Radeon Graphics', 15500000.00, 30, 'lenovo_ideapad.jpg',0,0,0),
+('SP005', N'HP Spectre x360', 'NC001', 'LTOFFICE', 'Intel Core i7', '16GB', '1TB SSD', 'Intel Iris Xe Graphics', 32000000.00, 8, 'hp_spectre.jpg',0,0,0);
 
 -- Thêm dữ liệu vào bảng KhachHang
 INSERT INTO KhachHang (MaKH, TenKH, DienThoai, Email, DiaChi) VALUES
