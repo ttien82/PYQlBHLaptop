@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import PhieuNhap, ChiTietPhieuNhap
+from SanPham.models import PhieuNhap, ChiTietPhieuNhap
 
 
 #Dùng ModelSerializer để tự động map model -> JSON

@@ -14,7 +14,7 @@ class DonHang(models.Model):
 
 
 class ChiTietDonHang(models.Model):
-    id = models.AutoField(primary_key=True)
+    MaCTDH = models.AutoField(primary_key=True)
     MaDH = models.ForeignKey(
         DonHang,
         on_delete=models.CASCADE,

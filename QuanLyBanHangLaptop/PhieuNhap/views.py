@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from .models import PhieuNhap, ChiTietPhieuNhap
+from SanPham.models import PhieuNhap, ChiTietPhieuNhap
 from .serializers import PhieuNhapSerializer, ChiTietPhieuNhapSerializer
 
 def PhieuNhap_view(request):

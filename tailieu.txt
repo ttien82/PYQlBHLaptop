@@ -100,3 +100,7 @@ Xem 1               ChiTietDonHang      GET	        /api/hoadon/chitietdonhang/g
 Sửa	                ChiTietDonHang      PUT	        /api/hoadon/chitietdonhang/update/DH001/SP001/
 Xóa_by_madh_masp    ChiTietDonHang      DELETE	    /api/hoadon/chitietdonhang/delete/DH001/SP001/
 Xóa	                ChiTietDonHang      DELETE	    /api/hoadon/chitietdonhang/delete/DH001/
+
+Tính giá nhập : http://127.0.0.1:8000/api/sanpham/tinh/gianhap
+Tính lai gop : http://127.0.0.1:8000/api/sanpham/tinh/laigop
+
