@@ -1,19 +1,13 @@
 
-from django.shortcuts import render, redirect, get_object_or_404
-from .models import *
-from .forms import SanPhamForm, LoaiSpForm, NhaCungCapForm
-from django.core.paginator import Paginator
-from rest_framework import serializers
-from rest_framework.response import Response
-from rest_framework import viewsets, status
-from TaiKhoan.views import check_Quyen
-
-
 from django.views.decorators.csrf import csrf_exempt
 from django.forms.models import model_to_dict
 from .models import SanPham, LoaiSP, NhaCungCap
 from django.http import HttpResponse, JsonResponse
 import json
+from rest_framework.response import Response
+from rest_framework import viewsets, status
+from rest_framework import serializers
+from TaiKhoan.views import check_Quyen
 
 # Hiển thị danh sách sản phẩm
 def danh_sach_san_pham(request):
@@ -275,17 +269,88 @@ def them_ncc(request):
             DiaChi = data.get("DiaChi")
             DienThoai = data.get("DienThoai")
 
-def sua_ncc(request, pk):
-    ncc = get_object_or_404(NhaCungCap, pk=pk)
-    if request.method == 'POST':
-        form = NhaCungCapForm(request.POST, instance=ncc)
-        if form.is_valid():
-            form.save()
-            return redirect('danh_sach_ncc')
-    else:
-        form = NhaCungCapForm(instance=ncc)
-    return render(request, 'sanpham/form_ncc.html', {'form': form, 'title': 'Sửa thông tin nhà cung cấp'})
+            # 2. Kiểm tra trùng nhà cung cấp
+            if NhaCungCap.objects.filter(MaNCC=MaNCC).exists():
+                return JsonResponse({"success": False, "error": "Mã nhà cung cấp đã tồn tại."}, status=400)
 
+            # 3. Tạo nhà cung cấp mới
+            ncc = NhaCungCap.objects.create(
+                MaNCC=MaNCC,
+                TenNCC=TenNCC,
+                DiaChi=DiaChi,
+                DienThoai=DienThoai
+            )
+            #4. Trả về Json
+            return JsonResponse({
+                "success": True,
+                "message": "Thêm nhà cung cấp thành công.",
+                "san_pham": model_to_dict(ncc)
+            }, status=201)
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)}, status=400)
+    else :
+        return JsonResponse({"success": False, "error": "Không phải phương thức POST "}, status=405)
+
+# Sửa nhà cung cấp
+@csrf_exempt # Bỏ kiểm tra CSRF khi gửi từ Postman
+def sua_ncc(request):
+    #1. Kiểm tra phương thức
+    if request.method == "PUT":
+        try:
+            #2. Lấy dữ liệu json sửa
+            data = json.loads(request.body)
+            MaNCC = data.get("MaNCC")
+            #3. Kiểm tra xem mã sản phẩm có tồn tại không
+            try:
+                ncc = NhaCungCap.objects.get(MaNCC=MaNCC)
+            except NhaCungCap.DoesNotExist:
+                return JsonResponse({"success": False, "error": f"Nhà cung cấp '{MaNCC}' không tồn tại."}, status=404)
+
+            # 4. Cập nhật các trường (nếu có gửi lên)
+            ncc.TenNCC = data.get("TenNCC", ncc.TenNCC)
+            ncc.DiaChi = data.get("DiaChi", ncc.DiaChi)
+            ncc.DienThoai = data.get("DienThoai", ncc.DienThoai)
+
+            #5. Lưu lại
+            ncc.save()
+            #6. Trả về json
+            return JsonResponse({
+                "success": True,
+                "message": "Sửa sản phẩm thành công.",
+                "san_pham": model_to_dict(ncc)
+            })
+
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)}, status=500)
+
+    return JsonResponse({"success": False, "error": "Phương thức không hợp lệ. Dùng PUT."}, status=405)
+
+# Xóa nhà cung cấp
+@csrf_exempt #Bỏ kiểm tra CSRF khi gửi từ Postman
+def xoa_ncc(request):
+    # 1. Kiểm tra phương thức
+    if request.method == "DELETE":
+        try:
+            # 2. Lấy dữ liệu json xóa
+            data = json.loads(request.body)
+            MaNCC = data.get("MaNCC")
+            # 3. Kiểm tra xem mã nhà cung cấp có tồn tại không
+            try:
+                ncc = NhaCungCap.objects.get(MaNCC=MaNCC)
+            except NhaCungCap.DoesNotExist:
+                return JsonResponse({"success": False, "error": f"Nhà cung cấp '{MaNCC}' không tồn tại."}, status=404)
+            # 4. Xóa nhà cung cấp
+            ncc.delete()
+            #5. Trả về json
+            return JsonResponse({
+                "success": True,
+                "message": f"Đã xoá nhà cung cấp '{MaNCC}' thành công."
+            })
+
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)}, status=500)
+
+    return JsonResponse({"success": False, "error": "Phương thức không hợp lệ. Dùng DELETE."}, status=405)
 
 class SanPhamS(serializers.ModelSerializer):
     class Meta:
@@ -388,85 +453,3 @@ class NhaCungCapV(viewsets.ModelViewSet):
             return Response({'Không có quyền thao tác '},status=status.HTTP_403_FORBIDDEN)
         return super(NhaCungCapV, self).destroy(request, args, kwargs)
 
-            # 2. Kiểm tra trùng nhà cung cấp
-            if NhaCungCap.objects.filter(MaNCC=MaNCC).exists():
-                return JsonResponse({"success": False, "error": "Mã nhà cung cấp đã tồn tại."}, status=400)
-
-            # 3. Tạo nhà cung cấp mới
-            ncc = NhaCungCap.objects.create(
-                MaNCC=MaNCC,
-                TenNCC=TenNCC,
-                DiaChi=DiaChi,
-                DienThoai=DienThoai
-            )
-            #4. Trả về Json
-            return JsonResponse({
-                "success": True,
-                "message": "Thêm nhà cung cấp thành công.",
-                "san_pham": model_to_dict(ncc)
-            }, status=201)
-        except Exception as e:
-            return JsonResponse({"success": False, "error": str(e)}, status=400)
-    else :
-        return JsonResponse({"success": False, "error": "Không phải phương thức POST "}, status=405)
-
-# Sửa nhà cung cấp
-@csrf_exempt # Bỏ kiểm tra CSRF khi gửi từ Postman
-def sua_ncc(request):
-    #1. Kiểm tra phương thức
-    if request.method == "PUT":
-        try:
-            #2. Lấy dữ liệu json sửa
-            data = json.loads(request.body)
-            MaNCC = data.get("MaNCC")
-            #3. Kiểm tra xem mã sản phẩm có tồn tại không
-            try:
-                ncc = NhaCungCap.objects.get(MaNCC=MaNCC)
-            except NhaCungCap.DoesNotExist:
-                return JsonResponse({"success": False, "error": f"Nhà cung cấp '{MaNCC}' không tồn tại."}, status=404)
-
-            # 4. Cập nhật các trường (nếu có gửi lên)
-            ncc.TenNCC = data.get("TenNCC", ncc.TenNCC)
-            ncc.DiaChi = data.get("DiaChi", ncc.DiaChi)
-            ncc.DienThoai = data.get("DienThoai", ncc.DienThoai)
-
-            #5. Lưu lại
-            ncc.save()
-            #6. Trả về json
-            return JsonResponse({
-                "success": True,
-                "message": "Sửa sản phẩm thành công.",
-                "san_pham": model_to_dict(ncc)
-            })
-
-        except Exception as e:
-            return JsonResponse({"success": False, "error": str(e)}, status=500)
-
-    return JsonResponse({"success": False, "error": "Phương thức không hợp lệ. Dùng PUT."}, status=405)
-
-# Xóa nhà cung cấp
-@csrf_exempt #Bỏ kiểm tra CSRF khi gửi từ Postman
-def xoa_ncc(request):
-    # 1. Kiểm tra phương thức
-    if request.method == "DELETE":
-        try:
-            # 2. Lấy dữ liệu json xóa
-            data = json.loads(request.body)
-            MaNCC = data.get("MaNCC")
-            # 3. Kiểm tra xem mã nhà cung cấp có tồn tại không
-            try:
-                ncc = NhaCungCap.objects.get(MaNCC=MaNCC)
-            except NhaCungCap.DoesNotExist:
-                return JsonResponse({"success": False, "error": f"Nhà cung cấp '{MaNCC}' không tồn tại."}, status=404)
-            # 4. Xóa nhà cung cấp
-            ncc.delete()
-            #5. Trả về json
-            return JsonResponse({
-                "success": True,
-                "message": f"Đã xoá nhà cung cấp '{MaNCC}' thành công."
-            })
-
-        except Exception as e:
-            return JsonResponse({"success": False, "error": str(e)}, status=500)
-
-    return JsonResponse({"success": False, "error": "Phương thức không hợp lệ. Dùng DELETE."}, status=405)
