@@ -60,3 +60,6 @@ Xem - Nhà cung cấp -GET: http://127.0.0.1:8000/api/sanpham/ncc/
 Thêm - Loại SP - POST: http://127.0.0.1:8000/api/sanpham/ncc/them/
 Sửa - Loại SP - PUT: http://127.0.0.1:8000/api/sanpham/ncc/sua/
 Xóa - Loại SP - DELETE: http://127.0.0.1:8000/api/sanpham/ncc/xoa/
+
+Tính giá nhập : http://127.0.0.1:8000/api/sanpham/tinh/gianhap
+Tính lai gop : http://127.0.0.1:8000/api/sanpham/tinh/laigop
