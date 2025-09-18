@@ -17,15 +17,6 @@ class LoaiSP(models.Model):
     def create(cls, ma_loai, ten_loai):
         return cls.objects.create(MaLoaiSP=ma_loai, TenLoaiSP=ten_loai)
 
-    def update_info(self, ten_loai=None):
-        if ten_loai:
-            self.TenLoaiSP = ten_loai
-        self.save()
-        return self
-
-    def delete_loai(self):
-        self.delete()
-
 # Bảng Nhà Cung Cấp
 class NhaCungCap(models.Model):
     MaNCC = models.CharField(max_length=20, primary_key=True)
@@ -50,19 +41,6 @@ class NhaCungCap(models.Model):
             DienThoai=dien_thoai,
         )
 
-    def update_info(self, ten_ncc=None, dia_chi=None, dien_thoai=None):
-        if ten_ncc:
-            self.TenNCC = ten_ncc
-        if dia_chi:
-            self.DiaChi = dia_chi
-        if dien_thoai:
-            self.DienThoai = dien_thoai
-        self.save()
-        return self
-
-    def delete_ncc(self):
-        self.delete()
-
 # Bảng Sản Phẩm
 class SanPham(models.Model):
     MaSP = models.CharField(max_length=20, primary_key=True)
@@ -75,10 +53,13 @@ class SanPham(models.Model):
     RAM = models.CharField(max_length=50, null=True, blank=True)
     OCung = models.CharField(max_length=50, null=True, blank=True)
     CardManHinh = models.CharField(max_length=100, null=True, blank=True)
+    GiaNhap = models.DecimalField(max_digits=18, decimal_places=0, null=True, blank=True)
+    Thue = models.IntegerField(null=True, blank=True)
     GiaBan = models.DecimalField(max_digits=18, decimal_places=0, null=True, blank=True)
     SoLuongTon = models.IntegerField(null=True, blank=True)
     HinhAnh = models.CharField(max_length=255, null=True, blank=True)
-
+    LaiGop = models.DecimalField(max_digits=18, decimal_places=0, null=True, blank=True)
+    
     def __str__(self):
         return self.TenSP
 
@@ -86,6 +67,7 @@ class SanPham(models.Model):
         db_table = "SanPham"
         verbose_name = 'Sản phẩm'
         verbose_name_plural = 'Sản phẩm'
+        
 
     @classmethod
     def create(cls, ma_sp, ten_sp, ncc, loai_sp, **kwargs):
@@ -96,12 +78,58 @@ class SanPham(models.Model):
             LoaiSP=loai_sp,
             **kwargs
         )
+    
+   # model cho bảng Nhân Viên
+class NhanVien(models.Model):
+    MaNV = models.CharField(max_length=20, primary_key=True)
+    TenNV = models.CharField(max_length=255)
+    DiaChi = models.CharField(max_length=255, null=True, blank=True)
+    DienThoai = models.CharField(max_length=15, null=True, blank=True)
 
-    def update_info(self, **kwargs):
-        for key, value in kwargs.items():
-            setattr(self, key, value)
-        self.save()
-        return self
+    def __str__(self):
+        """"Trả về tên Nhân viên"""
+        return self.TenNV
 
-    def delete_sp(self):
-        self.delete()
+# dùng meta để django đọc model Nhân Viên
+    class Meta:
+        db_table = 'NhanVien'
+        verbose_name='Nhân viên'
+        verbose_name_plural='Danh sách nhân viên'
+
+
+class PhieuNhap(models.Model):
+    MaPN = models.CharField(max_length=20, primary_key=True)
+    MaNCC = models.ForeignKey(NhaCungCap, on_delete=models.CASCADE, db_column="MaNCC")
+    MaNV = models.ForeignKey(NhanVien, on_delete=models.CASCADE, db_column="MaNV")
+    NgayNhap = models.DateTimeField(auto_now_add=True)
+    TongTien = models.DecimalField(max_digits=18, decimal_places=2)
+
+    class Meta:
+        db_table = "PhieuNhap"
+
+    def __str__(self):
+        return f"Phiếu nhập {self.MaPN}"
+
+
+class ChiTietPhieuNhap(models.Model):
+    MaCTPN = models.AutoField(primary_key=True, db_column='MaCTPN')
+    MaPN = models.ForeignKey(
+        'PhieuNhap',
+        on_delete=models.CASCADE,
+        db_column='MaPN'
+    )
+    MaSP = models.ForeignKey(
+        'SanPham',
+        on_delete=models.CASCADE,
+        db_column='MaSP'
+    )
+    SoLuong = models.PositiveIntegerField()
+    GiaNhap = models.DecimalField(max_digits=18, decimal_places=2)
+
+    class Meta:
+        db_table = "ChiTietPhieuNhap"
+        unique_together = (("MaPN", "MaSP"),)
+
+
+    def __str__(self):
+        return f"{self.PhieuNhap.MaPN} - {self.SanPham.TenSP}"

@@ -1,9 +1,56 @@
 
 from django.views.decorators.csrf import csrf_exempt
 from django.forms.models import model_to_dict
-from .models import SanPham, LoaiSP, NhaCungCap
+from .models import SanPham, LoaiSP, NhaCungCap, ChiTietPhieuNhap
 from django.http import HttpResponse, JsonResponse
+from .LaiGop.GiaNhap import GiaNhap
+from .LaiGop.LaiGop import LaiGop
 import json
+
+
+# Tính giá nhập sản phẩm
+def tinh_gia_nhap(request):
+    #1. Vào model lấy thông tin, lấy data
+    sanphams = SanPham.objects.all().values().order_by('MaSP')
+    #2. Gọi module code tính giá nhập
+    gia_nhap = GiaNhap('Đợt 1')
+    gia_nhap.init_ds_sp(sanphams)
+    gia_nhap.tinh()
+    
+    dt = {
+        'ket-qua-thuc-hien' : [{
+            'MaSP': sp['MaSP'],
+            'TenSP': sp['TenSP'],
+            'GiaNhap': sp['GiaNhap']
+        }
+        for sp in gia_nhap.ds_sp
+        ]
+    }
+    # 3. Trả về json
+    return JsonResponse(dt)
+
+def tinh_lai(request):
+    # 1. Vào model lấy thông tin, lấy data
+    sanpham = SanPham.objects.all().values().order_by('MaSP')
+    # 2. Gọi module code tính giá nhập
+    lai = LaiGop('Đợt 1')
+    lai.init_ds_sp(sanpham)
+    lai.tinh()
+
+    dt = {
+        'ket-qua-thuc-hien': [{
+            'MaSP': sp['MaSP'],
+            'TenSP': sp['TenSP'],
+            'GiaNhap': sp['GiaNhap'],
+            'GiaBan': sp['GiaBan'],
+            'Thue': sp['Thue'],
+            'LaiGop': sp['LaiGop']
+        }
+            for sp in lai.ds_sp
+        ]
+    }
+    # 3. Trả về json
+    return JsonResponse(dt)
 
 # Hiển thị danh sách sản phẩm
 def danh_sach_san_pham(request):
@@ -29,6 +76,7 @@ def them_san_pham(request):
             CardManHinh = data.get("CardManHinh")
             GiaBan = data.get("GiaBan")
             SoLuongTon = data.get("SoLuongTon")
+            Thue = data.get("Thue")
             HinhAnh = data.get("HinhAnh")
 
             # 2. Kiểm tra trùng mã sản phẩm
@@ -57,6 +105,7 @@ def them_san_pham(request):
                 CardManHinh=CardManHinh,
                 GiaBan=GiaBan,
                 SoLuongTon=SoLuongTon,
+                Thue = Thue,
                 HinhAnh=HinhAnh
             )
             #4. Trả về Json
@@ -94,7 +143,7 @@ def sua_san_pham(request):
             sp.GiaBan = data.get("GiaBan", sp.GiaBan)
             sp.SoLuongTon = data.get("SoLuongTon", sp.SoLuongTon)
             sp.HinhAnh = data.get("HinhAnh", sp.HinhAnh)
-
+            sp.Thue = data.get("Thue", sp.Thue)
             # 5.Cập nhật khóa ngoại nếu sửa
             MaNCC_id = data.get("MaNCC_id")
             if MaNCC_id:
