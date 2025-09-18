@@ -43,6 +43,18 @@ This password is too common.
 This password is entirely numeric.
 Bypass password validation and create user anyway? [y/N]: y
 Superuser created successfully.
+
+PS D:\Python\QuanLyBanHangLaptop> 
+
+python manage.py shell
+
+from django.contrib.sessions.models import Session
+from django.contrib.auth.models import User
+
+# Lấy session gần nhất
+s = Session.objects.last()
+print(s.session_key)
+
 PS D:\Python\QuanLyBanHangLaptop>
 
 Đường dẫn app Sản Phẩm
@@ -61,5 +73,7 @@ Thêm - Loại SP - POST: http://127.0.0.1:8000/api/sanpham/ncc/them/
 Sửa - Loại SP - PUT: http://127.0.0.1:8000/api/sanpham/ncc/sua/
 Xóa - Loại SP - DELETE: http://127.0.0.1:8000/api/sanpham/ncc/xoa/
 
+
 Tính giá nhập : http://127.0.0.1:8000/api/sanpham/tinh/gianhap
 Tính lai gop : http://127.0.0.1:8000/api/sanpham/tinh/laigop
+

@@ -19,3 +19,4 @@ urlpatterns = [
      path('ncc/xoa/', views.xoa_ncc, name='xoa_ncc'),
 
 ]
+

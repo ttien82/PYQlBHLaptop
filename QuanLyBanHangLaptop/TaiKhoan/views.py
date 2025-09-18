@@ -111,6 +111,24 @@ class KhachHangV(viewsets.ModelViewSet):
             return Response({'Giới hạn quyền truy cập'},status=status.HTTP_403_FORBIDDEN)
         return super(KhachHangV, self).list(request, *args, **kwargs)
 
+
+    """Chỉ admin hoặc staff được phép thêm sửa"""
+    def create(self, request, *args, **kwargs):
+        if not check_Quyen(request.user, ['ADMIN','STAFF']):
+            return Response({'Không có quyền thao tác '},status=status.HTTP_403_FORBIDDEN)
+        return super(KhachHangV, self).create(request, args, kwargs)
+
+    def update(self, request, *args, **kwargs):
+        if not check_Quyen(request.user, ['ADMIN','STAFF']):
+            return Response({'Không có quyền thao tác '},status=status.HTTP_403_FORBIDDEN)
+        return super(KhachHangV, self).update(request, args, kwargs)
+
+    """Chỉ admin mới có thể xóa sản phẩm"""
+    def destroy(self, request, *args, **kwargs):
+        if not check_Quyen(request.user, ['ADMIN']):
+            return Response({'Không có quyền thao tác '},status=status.HTTP_403_FORBIDDEN)
+        return super(KhachHangV, self).destroy(request, args, kwargs)
+
     """Admin đc truy cập"""
 class TaiKhoanV(viewsets.ModelViewSet):
     queryset = TaiKhoan.objects.all()
@@ -122,3 +140,4 @@ class TaiKhoanV(viewsets.ModelViewSet):
         if not check_Quyen(request.user, ['ADMIN']):
             return Response({'Giới hạn quyền truy cập'},status=status.HTTP_403_FORBIDDEN)
         return super(TaiKhoanV, self).list(request, *args, **kwargs)
+
