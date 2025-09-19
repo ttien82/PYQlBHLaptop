@@ -15,3 +15,4 @@ class PhieuNhapSerializer(serializers.ModelSerializer):
     class Meta:
         model = PhieuNhap
         fields = '__all__'
+

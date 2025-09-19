@@ -105,7 +105,7 @@ DATABASES = {
             'NAME': 'QuanLyBanLaptopPY',                        # tên database đã tạo trong SQL
             'USER': 'sa',                                       # user đăng nhập SQL Server
             'PASSWORD': '123456',                               # password SQL Server
-            'HOST': 'DESKTOP\SQLEXPRESS',               # server DESKTOP\SQLEXPRESS 127.0.0.1,1433
+            'HOST': '127.0.0.1,1433',               # server DESKTOP\SQLEXPRESS 127.0.0.1,1433
             'PORT': '1433',                                     # port mặc định SQL Server
             'OPTIONS': {
             'driver': 'ODBC Driver 17 for SQL Server',
@@ -157,8 +157,8 @@ AUTH_USER_MODEL ='TaiKhoan.TaiKhoan'
 
 
 #tam thoi tat xac thuc
-REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',
-    ]
-}
+# REST_FRAMEWORK = {
+#     'DEFAULT_PERMISSION_CLASSES': [
+#         'rest_framework.permissions.AllowAny',
+#     ]
+# }

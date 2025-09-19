@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from .models import DonHang, ChiTietDonHang
 from .serializers import DonHangSerializer, ChiTietDonHangSerializer
+from django.db.models import Sum
 
 class DonHangViewSet(viewsets.ModelViewSet):
     queryset = DonHang.objects.all()
@@ -54,3 +55,21 @@ class ChiTietDonHangViewSet(viewsets.ModelViewSet):
             return Response({"detail": "Không tìm thấy chi tiết này"}, status=status.HTTP_404_NOT_FOUND)
         chitiet.delete()
         return Response({"detail": f"Đã xóa chi tiết {masp} của MaDH {madh}"}, status=status.HTTP_204_NO_CONTENT)
+
+    # 1. Top 10 Sản phẩm bán chạy nhất
+    @action(detail=False, methods=['get'], url_path='san-pham-ban-chay')
+    def san_pham_ban_chay(self, request):
+        result = (ChiTietDonHang.objects
+                  .values('MaSP')
+                  .annotate(tong_so_luong=Sum('SoLuong'))
+                  .order_by('-tong_so_luong')[:10])
+        return Response(result)
+
+    # 2. Top 20 Khách hàng mua nhiều nhất
+    @action(detail=False, methods=['get'], url_path='khach-hang-mua-nhieu')
+    def khach_hang_mua_nhieu(self, request):
+        result = (DonHang.objects
+                  .values('MaKH')
+                  .annotate(tong_tien=Sum('TongTien'))
+                  .order_by('-tong_tien')[:20])
+        return Response(result)

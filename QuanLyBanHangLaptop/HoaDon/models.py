@@ -1,5 +1,8 @@
 from django.db import models
 from SanPham.models import SanPham
+from django.db.models import Sum
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
 
 class DonHang(models.Model):
     MaDH = models.CharField(max_length=20, primary_key=True)
@@ -31,3 +34,10 @@ class ChiTietDonHang(models.Model):
     class Meta:
         unique_together = ('MaDH', 'MaSP')
         db_table = 'ChiTietDonHang'
+
+# ===== SIGNALS ĐỂ UPDATE TỔNG TIỀN =====
+@receiver([post_save, post_delete], sender=ChiTietDonHang)
+def update_tong_tien(sender, instance, **kwargs):
+    tong = ChiTietDonHang.objects.filter(MaDH=instance.MaDH) \
+               .aggregate(tong=Sum(models.F('SoLuong') * models.F('DonGia')))['tong'] or 0
+    DonHang.objects.filter(pk=instance.MaDH.pk).update(TongTien=tong)

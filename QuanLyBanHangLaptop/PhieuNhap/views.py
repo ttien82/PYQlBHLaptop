@@ -4,6 +4,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from SanPham.models import PhieuNhap, ChiTietPhieuNhap
 from .serializers import PhieuNhapSerializer, ChiTietPhieuNhapSerializer
+from django.db.models import Sum
 
 def PhieuNhap_view(request):
     return JsonResponse({"PhieuNhap": "test"})
@@ -17,7 +18,6 @@ class ChiTietPhieuNhapViewSet(viewsets.ModelViewSet):
     queryset = ChiTietPhieuNhap.objects.all()
     serializer_class = ChiTietPhieuNhapSerializer
 
-    # Lấy chi tiết phiếu nhập theo MaPN
     @action(detail=False, methods=['get'], url_path='get-by-mapn/(?P<mapn>[^/.]+)')
     def get_by_mapn(self, request, mapn=None):
         chitiet = ChiTietPhieuNhap.objects.filter(MaPN=mapn)
@@ -60,3 +60,21 @@ class ChiTietPhieuNhapViewSet(viewsets.ModelViewSet):
             chitiet.delete()
             return Response({'message': 'Đã xóa thành công'}, status=status.HTTP_204_NO_CONTENT)
         return Response({'error': 'Không tìm thấy phiếu nhập'}, status=status.HTTP_404_NOT_FOUND)
+
+    #1. Top 30 Sản phẩm nhập nhiều nhất
+    @action(detail=False, methods=['get'], url_path='san-pham-nhap-nhieu')
+    def san_pham_nhap_nhieu(self, request):
+        result = (ChiTietPhieuNhap.objects
+                  .values('MaSP')
+                  .annotate(tong_so_luong=Sum('SoLuong'))
+                  .order_by('-tong_so_luong')[:30])
+        return Response(result)
+
+    #2 Top 3 Nhà cung cấp nhập nhiều nhất
+    @action(detail=False, methods=['get'], url_path='nha-cung-cap-nhap-nhieu')
+    def nha_cung_cap_nhap_nhieu(self, request):
+        result = (PhieuNhap.objects
+                  .values('MaNCC')
+                  .annotate(tong_tien=Sum('TongTien'))
+                  .order_by('-tong_tien')[:3])
+        return Response(result)

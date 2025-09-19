@@ -1,4 +1,7 @@
 from django.db import models
+from django.db.models import Sum
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
 
 # Bảng Loại Sản Phẩm
 class LoaiSP(models.Model):
@@ -131,5 +134,12 @@ class ChiTietPhieuNhap(models.Model):
         unique_together = (("MaPN", "MaSP"),)
 
 
-    def __str__(self):
-        return f"{self.PhieuNhap.MaPN} - {self.SanPham.TenSP}"
+# ===== SIGNALS ĐỂ UPDATE TỔNG TIỀN =====
+@receiver([post_save, post_delete], sender=ChiTietPhieuNhap)
+def update_tong_tien(sender, instance, **kwargs):
+    tong = ChiTietPhieuNhap.objects.filter(MaPN=instance.MaPN) \
+               .aggregate(tong=Sum(models.F('SoLuong') * models.F('GiaNhap')))['tong'] or 0
+    PhieuNhap.objects.filter(pk=instance.MaPN.pk).update(TongTien=tong)
+
+def __str__(self):
+    return f"{self.PhieuNhap.MaPN} - {self.SanPham.TenSP}"
