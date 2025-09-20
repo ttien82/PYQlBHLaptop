@@ -3,11 +3,61 @@ from django.views.decorators.csrf import csrf_exempt
 from django.forms.models import model_to_dict
 from .models import SanPham, LoaiSP, NhaCungCap
 from django.http import HttpResponse, JsonResponse
+from .LaiGop.GiaNhap import GiaNhap
+from .LaiGop.LaiGop import LaiGop
 import json
 from rest_framework.response import Response
 from rest_framework import viewsets, status
 from rest_framework import serializers
 from TaiKhoan.views import check_Quyen
+<<<<<<< HEAD
+=======
+
+
+# Tính giá nhập sản phẩm
+def tinh_gia_nhap(request):
+    #1. Vào model lấy thông tin, lấy data
+    sanphams = SanPham.objects.all().values().order_by('MaSP')
+    #2. Gọi module code tính giá nhập
+    gia_nhap = GiaNhap('Đợt 1')
+    gia_nhap.init_ds_sp(sanphams)
+    gia_nhap.tinh()
+    
+    dt = {
+        'ket-qua-thuc-hien' : [{
+            'MaSP': sp['MaSP'],
+            'TenSP': sp['TenSP'],
+            'GiaNhap': sp['GiaNhap']
+        }
+        for sp in gia_nhap.ds_sp
+        ]
+    }
+    # 3. Trả về json
+    return JsonResponse(dt)
+
+def tinh_lai(request):
+    # 1. Vào model lấy thông tin, lấy data
+    sanpham = SanPham.objects.all().values().order_by('MaSP')
+    # 2. Gọi module code tính giá nhập
+    lai = LaiGop('Đợt 1')
+    lai.init_ds_sp(sanpham)
+    lai.tinh()
+
+    dt = {
+        'ket-qua-thuc-hien': [{
+            'MaSP': sp['MaSP'],
+            'TenSP': sp['TenSP'],
+            'GiaNhap': sp['GiaNhap'],
+            'GiaBan': sp['GiaBan'],
+            'Thue': sp['Thue'],
+            'LaiGop': sp['LaiGop']
+        }
+            for sp in lai.ds_sp
+        ]
+    }
+    # 3. Trả về json
+    return JsonResponse(dt)
+>>>>>>> a4639d2391ebb010b99dbd89da080ce22fd2bdda
 
 # Hiển thị danh sách sản phẩm
 def danh_sach_san_pham(request):
@@ -33,6 +83,7 @@ def them_san_pham(request):
             CardManHinh = data.get("CardManHinh")
             GiaBan = data.get("GiaBan")
             SoLuongTon = data.get("SoLuongTon")
+            Thue = data.get("Thue")
             HinhAnh = data.get("HinhAnh")
 
             # 2. Kiểm tra trùng mã sản phẩm
@@ -61,6 +112,7 @@ def them_san_pham(request):
                 CardManHinh=CardManHinh,
                 GiaBan=GiaBan,
                 SoLuongTon=SoLuongTon,
+                Thue = Thue,
                 HinhAnh=HinhAnh
             )
             #4. Trả về Json
@@ -98,7 +150,7 @@ def sua_san_pham(request):
             sp.GiaBan = data.get("GiaBan", sp.GiaBan)
             sp.SoLuongTon = data.get("SoLuongTon", sp.SoLuongTon)
             sp.HinhAnh = data.get("HinhAnh", sp.HinhAnh)
-
+            sp.Thue = data.get("Thue", sp.Thue)
             # 5.Cập nhật khóa ngoại nếu sửa
             MaNCC_id = data.get("MaNCC_id")
             if MaNCC_id:
@@ -374,27 +426,46 @@ class SanPhamV(viewsets.ModelViewSet):
 
     """Ai cũng xem đc danh sách sản phẩm"""
     def list(self, request, *args, **kwargs):
+<<<<<<< HEAD
         return super(SanPhamV, self).list(request, *args, **kwargs)
 
     def retrieve(self, request, *args, **kwargs):
         return super(SanPhamV, self).retrieve(request,*args, **kwargs)
+=======
+        return super(SanPhamV, self).list(request, args, kwargs)
+
+    def retrieve(self, request, *args, **kwargs):
+        return super(SanPhamV, self).retrieve(request,args, kwargs)
+>>>>>>> a4639d2391ebb010b99dbd89da080ce22fd2bdda
 
     """Chỉ admin hoặc staff được phép xem xóa sửa"""
     def create(self, request, *args, **kwargs):
         if not check_Quyen(request.user, ['ADMIN','STAFF']):
             return Response({'Không có quyền thao tác '},status=status.HTTP_403_FORBIDDEN)
+<<<<<<< HEAD
         return super(SanPhamV, self).create(request, *args, **kwargs)
+=======
+        return super(SanPhamV, self).create(request, args, kwargs)
+>>>>>>> a4639d2391ebb010b99dbd89da080ce22fd2bdda
 
     def update(self, request, *args, **kwargs):
         if not check_Quyen(request.user, ['ADMIN','STAFF']):
             return Response({'Không có quyền thao tác '},status=status.HTTP_403_FORBIDDEN)
+<<<<<<< HEAD
         return super(SanPhamV, self).update(request, *args, **kwargs)
+=======
+        return super(SanPhamV, self).update(request, args, kwargs)
+>>>>>>> a4639d2391ebb010b99dbd89da080ce22fd2bdda
 
     """Chỉ admin mới có thể xóa sản phẩm"""
     def destroy(self, request, *args, **kwargs):
         if not check_Quyen(request.user, ['ADMIN']):
             return Response({'Không có quyền thao tác '},status=status.HTTP_403_FORBIDDEN)
+<<<<<<< HEAD
         return super(SanPhamV, self).destroy(request, *args, **kwargs)
+=======
+        return super(SanPhamV, self).destroy(request, args, kwargs)
+>>>>>>> a4639d2391ebb010b99dbd89da080ce22fd2bdda
 
 
     """Phân quyền loại sp"""
@@ -404,27 +475,46 @@ class LoaiSPV(viewsets.ModelViewSet):
 
     """Ai cũng xem đc danh sách"""
     def list(self, request, *args, **kwargs):
+<<<<<<< HEAD
         return super(LoaiSPV, self).list(request, *args, **kwargs)
 
     def retrieve(self, request, *args, **kwargs):
         return super(LoaiSPV, self).retrieve(request,*args, **kwargs)
+=======
+        return super(LoaiSPV, self).list(request, args, kwargs)
+
+    def retrieve(self, request, *args, **kwargs):
+        return super(LoaiSPV, self).retrieve(request,args, kwargs)
+>>>>>>> a4639d2391ebb010b99dbd89da080ce22fd2bdda
 
     """Chỉ admin hoặc staff được phép xem xóa sửa"""
     def create(self, request, *args, **kwargs):
         if not check_Quyen(request.user, ['ADMIN','STAFF']):
             return Response({'Không có quyền thao tác '},status=status.HTTP_403_FORBIDDEN)
+<<<<<<< HEAD
         return super(LoaiSPV, self).create(request, *args, **kwargs)
+=======
+        return super(LoaiSPV, self).create(request, args, kwargs)
+>>>>>>> a4639d2391ebb010b99dbd89da080ce22fd2bdda
 
     def update(self, request, *args, **kwargs):
         if not check_Quyen(request.user, ['ADMIN','STAFF']):
             return Response({'Không có quyền thao tác '},status=status.HTTP_403_FORBIDDEN)
+<<<<<<< HEAD
         return super(LoaiSPV, self).update(request, *args, **kwargs)
+=======
+        return super(LoaiSPV, self).update(request, args, kwargs)
+>>>>>>> a4639d2391ebb010b99dbd89da080ce22fd2bdda
 
     """Chỉ admin mới có thể xóa"""
     def destroy(self, request, *args, **kwargs):
         if not check_Quyen(request.user, ['ADMIN']):
             return Response({'Không có quyền thao tác '},status=status.HTTP_403_FORBIDDEN)
+<<<<<<< HEAD
         return super(LoaiSPV, self).destroy(request, *args, **kwargs)
+=======
+        return super(LoaiSPV, self).destroy(request, args, kwargs)
+>>>>>>> a4639d2391ebb010b99dbd89da080ce22fd2bdda
 
 class NhaCungCapV(viewsets.ModelViewSet):
     queryset = NhaCungCap.objects.all()
@@ -434,22 +524,38 @@ class NhaCungCapV(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         if not check_Quyen(request.user, ['ADMIN', 'STAFF']):
             return Response({'Không có quyền thao tác '}, status=status.HTTP_403_FORBIDDEN)
+<<<<<<< HEAD
         return super(NhaCungCapV, self).list(request, *args, **kwargs)
+=======
+        return super(NhaCungCapV, self).create(request, args, kwargs)
+>>>>>>> a4639d2391ebb010b99dbd89da080ce22fd2bdda
 
     """Chỉ admin được phép thêm sửa"""
     def create(self, request, *args, **kwargs):
         if not check_Quyen(request.user, ['ADMIN']):
             return Response({'Không có quyền thao tác '},status=status.HTTP_403_FORBIDDEN)
+<<<<<<< HEAD
         return super(NhaCungCapV, self).create(request, *args, **kwargs)
+=======
+        return super(NhaCungCapV, self).create(request, args, kwargs)
+>>>>>>> a4639d2391ebb010b99dbd89da080ce22fd2bdda
 
     def update(self, request, *args, **kwargs):
         if not check_Quyen(request.user, ['ADMIN']):
             return Response({'Không có quyền thao tác '},status=status.HTTP_403_FORBIDDEN)
+<<<<<<< HEAD
         return super(NhaCungCapV, self).update(request, *args, **kwargs)
+=======
+        return super(NhaCungCapV, self).update(request, args, kwargs)
+>>>>>>> a4639d2391ebb010b99dbd89da080ce22fd2bdda
 
     """Chỉ admin mới có thể xóa"""
     def destroy(self, request, *args, **kwargs):
         if not check_Quyen(request.user, ['ADMIN']):
             return Response({'Không có quyền thao tác '},status=status.HTTP_403_FORBIDDEN)
+<<<<<<< HEAD
         return super(NhaCungCapV, self).destroy(request, *args, **kwargs)
+=======
+        return super(NhaCungCapV, self).destroy(request, args, kwargs)
+>>>>>>> a4639d2391ebb010b99dbd89da080ce22fd2bdda
 

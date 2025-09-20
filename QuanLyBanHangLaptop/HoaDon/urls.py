@@ -1,6 +1,11 @@
-from django.urls import path
-from . import views
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import DonHangViewSet, ChiTietDonHangViewSet
+
+router = DefaultRouter()
+router.register(r'donhangview', DonHangViewSet)
+router.register(r'chitietdonhang', ChiTietDonHangViewSet)
 
 urlpatterns = [
-    path('', views.HoaDon_view),
+    path('', include(router.urls)),
 ]

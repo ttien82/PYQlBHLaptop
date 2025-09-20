@@ -7,6 +7,9 @@ urlpatterns = [
      path('them/', views.them_san_pham, name='them_san_pham'),
      path('sua/', views.sua_san_pham, name='sua_san_pham'),
      path('xoa/', views.xoa_san_pham, name='xoa_san_pham'),
+     path('tinh/gianhap/', views.tinh_gia_nhap, name='tinh_gia_nhap'),
+     path('tinh/laigop/', views.tinh_lai, name='tinh_lai'),
+
      path('loaisp/', views.danh_sach_loai_sp, name='danh_sach_loai_sp'),
      path('loaisp/them/', views.them_loai_sp, name='them_loai_sp'),
      path('loaisp/sua/', views.sua_loai_sp, name='sua_loai_sp'),
