@@ -74,32 +74,34 @@ Sửa - Loại SP - PUT: http://127.0.0.1:8000/api/sanpham/ncc/sua/
 Xóa - Loại SP - DELETE: http://127.0.0.1:8000/api/sanpham/ncc/xoa/
 
 Đường dẫn app PhieuNhap
-Lấy danh sách       PhieuNhap	        GET	        /api/phieunhap/phieunhapview/
-Thêm    	        PhieuNhap           POST	    /api/phieunhap/phieunhapview/
-Xem 1               PhieuNhap           GET	        /api/phieunhap/phieunhapview/PN001/
-Sửa	                PhieuNhap           PUT	        /api/phieunhap/phieunhapview/PN001/
-Xóa	                PhieuNhap           DELETE	    /api/phieunhap/phieunhapview/PN001/
+Lấy danh sách       PhieuNhap	        GET	                    /api/phieunhap/phieunhap/
+Thêm    	        PhieuNhap           POST	                /api/phieunhap/phieunhap/
+Xem 1               PhieuNhap           GET	                    /api/phieunhap/phieunhap/PN001/
+Sửa	                PhieuNhap           PUT	                    /api/phieunhap/phieunhap/PN001/
+Xóa	                PhieuNhap           DELETE	                /api/phieunhap/phieunhap/PN001/
 
-Lấy danh sách       ChiTietPhieuNhap    GET	        /api/phieunhap/chitietphieunhap/
-Thêm        	    ChiTietPhieuNhap    POST	    /api/phieunhap/chitietphieunhap/
-Xem 1               ChiTietPhieuNhap    GET	        /api/phieunhap/chitietphieunhap/get-by-mapn/PN001/
-Sửa	                ChiTietPhieuNhap    PUT	        /api/phieunhap/chitietphieunhap/update/PN001/SP001
-Xóa_by_mapn_masp    ChiTietPhieuNhap    DELETE	    /api/phieunhap/chitietphieunhap/delete/PN001/SP001
-Xóa	                ChiTietPhieuNhap    DELETE	    /api/phieunhap/chitietphieunhap/delete/PN001/
+Lấy danh sách       ChiTietPhieuNhap    GET	                    /api/phieunhap/chitietphieunhap/
+Thêm        	    ChiTietPhieuNhap    POST	                /api/phieunhap/chitietphieunhap/
+Lấy 1 theo MaCTPN   ChiTietPhieuNhap    Post/Get/Put/Delete     /api/phieunhap/chitietphieunhap/1
+Xem 1               ChiTietPhieuNhap    GET	                    /api/phieunhap/chitietphieunhap/get-by-mapn/PN001/
+Sửa	                ChiTietPhieuNhap    PUT	                    /api/phieunhap/chitietphieunhap/update/PN001/SP001
+Xóa_by_mapn_masp    ChiTietPhieuNhap    DELETE	                /api/phieunhap/chitietphieunhap/delete/PN001/SP001
+Xóa	                ChiTietPhieuNhap    DELETE	                /api/phieunhap/chitietphieunhap/delete/PN001/
 
 Đường dẫn app HoaDon
-Lấy danh sách       DonHang	            GET	        /api/hoadon/donhangview/
-Thêm    	        DonHang             POST	    /api/hoadon/donhangview/
-Xem 1               DonHang             GET	        /api/hoadon/donhangview/DH001/
-Sửa	                DonHang             PUT	        /api/hoadon/donhangview/DH001/
-Xóa	                DonHang             DELETE	    /api/hoadon/donhangview/DH001/
+Lấy danh sách       DonHang	            GET	                    /api/hoadon/donhang/
+Thêm    	        DonHang             POST	                /api/hoadon/donhang/
+Xem 1               DonHang             GET	                    /api/hoadon/donhang/DH001/
+Sửa	                DonHang             PUT	                    /api/hoadon/donhang/DH001/
+Xóa	                DonHang             DELETE	                /api/hoadon/donhang/DH001/
 
-Lấy danh sách       ChiTietDonHang      GET	        /api/hoadon/chitietdonhang/
-Thêm        	    ChiTietDonHang      POST	    /api/hoadon/chitietdonhang/
-Xem 1               ChiTietDonHang      GET	        /api/hoadon/chitietdonhang/get-by-madh/DH001/
-Sửa	                ChiTietDonHang      PUT	        /api/hoadon/chitietdonhang/update/DH001/SP001/
-Xóa_by_madh_masp    ChiTietDonHang      DELETE	    /api/hoadon/chitietdonhang/delete/DH001/SP001/
-Xóa	                ChiTietDonHang      DELETE	    /api/hoadon/chitietdonhang/delete/DH001/
+Lấy danh sách       ChiTietDonHang      GET	                    /api/hoadon/chitietdonhang/
+Thêm        	    ChiTietDonHang      POST	                /api/hoadon/chitietdonhang/
+Lấy 1 theo MaCTDH   ChiTietDonHang    Post/Get/Put/Delete       /api/hoadon/chitietdonhang/1
+Xem 1               ChiTietDonHang      GET	                    /api/hoadon/chitietdonhang/get-by-madh/DH001/
+Sửa	                ChiTietDonHang      PUT	                    /api/hoadon/chitietdonhang/update/DH001/SP001/
+Xóa_by_madh_masp    ChiTietDonHang      DELETE	                /api/hoadon/chitietdonhang/delete/DH001/SP001/
+Xóa	                ChiTietDonHang      DELETE	                /api/hoadon/chitietdonhang/delete/DH001/
 
 Tính giá nhập : http://127.0.0.1:8000/api/sanpham/tinh/gianhap
 Tính lai gop : http://127.0.0.1:8000/api/sanpham/tinh/laigop

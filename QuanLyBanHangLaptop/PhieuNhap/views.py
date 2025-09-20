@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from SanPham.models import PhieuNhap, ChiTietPhieuNhap
+from .models import *
 from .serializers import PhieuNhapSerializer, ChiTietPhieuNhapSerializer
 from django.db.models import Sum
 

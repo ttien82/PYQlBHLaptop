@@ -1,6 +1,5 @@
-from ..models import ChiTietPhieuNhap, PhieuNhap, SanPham
-from django.db.models import OuterRef, Subquery
-
+from PhieuNhap.models import ChiTietPhieuNhap
+from ..models import SanPham
 
 class GiaNhap:
     def __init__(self, Dot ):

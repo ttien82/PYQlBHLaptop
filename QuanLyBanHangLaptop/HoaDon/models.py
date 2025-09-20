@@ -13,8 +13,10 @@ class DonHang(models.Model):
     TrangThai = models.CharField(max_length=50)
 
     class Meta:
+        managed = False
         db_table = 'DonHang'
-
+        verbose_name = 'Đơn Hàng'
+        verbose_name_plural = 'Đơn Hàng'
 
 class ChiTietDonHang(models.Model):
     MaCTDH = models.AutoField(primary_key=True)
@@ -32,7 +34,10 @@ class ChiTietDonHang(models.Model):
     DonGia = models.DecimalField(max_digits=18, decimal_places=2)
 
     class Meta:
+        managed = False
         unique_together = ('MaDH', 'MaSP')
+        verbose_name = 'Chi Tiết Đơn Hàng'
+        verbose_name_plural = 'Chi Tiết Đơn Hàng'
         db_table = 'ChiTietDonHang'
 
 # ===== SIGNALS ĐỂ UPDATE TỔNG TIỀN =====

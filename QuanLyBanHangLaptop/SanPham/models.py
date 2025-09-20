@@ -15,6 +15,7 @@ class LoaiSP(models.Model):
         db_table = "LoaiSP"
         verbose_name = 'Loại sản phẩm'
         verbose_name_plural = 'Loại sản phẩm'
+        managed = False
 
     @classmethod
     def create(cls, ma_loai, ten_loai):
@@ -31,6 +32,7 @@ class NhaCungCap(models.Model):
         return self.TenNCC
 
     class Meta:
+        managed = False
         db_table = "NhaCungCap"
         verbose_name = 'Nhà cung cấp'
         verbose_name_plural = 'Nhà cung cấp'
@@ -67,6 +69,7 @@ class SanPham(models.Model):
         return self.TenSP
 
     class Meta:
+        managed = False
         db_table = "SanPham"
         verbose_name = 'Sản phẩm'
         verbose_name_plural = 'Sản phẩm'
@@ -95,51 +98,7 @@ class NhanVien(models.Model):
 
 # dùng meta để django đọc model Nhân Viên
     class Meta:
+        managed = False
         db_table = 'NhanVien'
         verbose_name='Nhân viên'
         verbose_name_plural='Danh sách nhân viên'
-
-
-class PhieuNhap(models.Model):
-    MaPN = models.CharField(max_length=20, primary_key=True)
-    MaNCC = models.ForeignKey(NhaCungCap, on_delete=models.CASCADE, db_column="MaNCC")
-    MaNV = models.ForeignKey(NhanVien, on_delete=models.CASCADE, db_column="MaNV")
-    NgayNhap = models.DateTimeField(auto_now_add=True)
-    TongTien = models.DecimalField(max_digits=18, decimal_places=2)
-
-    class Meta:
-        db_table = "PhieuNhap"
-
-    def __str__(self):
-        return f"Phiếu nhập {self.MaPN}"
-
-
-class ChiTietPhieuNhap(models.Model):
-    MaCTPN = models.AutoField(primary_key=True, db_column='MaCTPN')
-    MaPN = models.ForeignKey(
-        'PhieuNhap',
-        on_delete=models.CASCADE,
-        db_column='MaPN'
-    )
-    MaSP = models.ForeignKey(
-        'SanPham',
-        on_delete=models.CASCADE,
-        db_column='MaSP'
-    )
-    SoLuong = models.PositiveIntegerField()
-    GiaNhap = models.DecimalField(max_digits=18, decimal_places=2)
-
-    class Meta:
-        db_table = "ChiTietPhieuNhap"
-        unique_together = (("MaPN", "MaSP"),)
-
-
-# ===== SIGNALS ĐỂ UPDATE TỔNG TIỀN =====
-@receiver([post_save, post_delete], sender=ChiTietPhieuNhap)
-def update_tong_tien(sender, instance, **kwargs):
-    tong = ChiTietPhieuNhap.objects.filter(MaPN=instance.MaPN) \
-               .aggregate(tong=Sum(models.F('SoLuong') * models.F('GiaNhap')))['tong'] or 0
-    PhieuNhap.objects.filter(pk=instance.MaPN.pk).update(TongTien=tong)
-
-def __str__(self):
-    return f"{self.PhieuNhap.MaPN} - {self.SanPham.TenSP}"
