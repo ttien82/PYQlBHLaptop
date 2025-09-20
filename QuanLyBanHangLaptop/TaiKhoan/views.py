@@ -1,15 +1,22 @@
-from django.http import JsonResponse
-from rest_framework import serializers
-from rest_framework import permissions
+from rest_framework import serializers , viewsets, status
 from rest_framework.response import Response
-from rest_framework import viewsets, status
-from .models import *
+from .models import TaiKhoan, KhachHang, Quyen, NhanVien
+from django.db.models import Q
+from QuanLyBanHangLaptop.Ho_Tro import check_Quyen, TimKiem, VietNamese
+
 
 # Sử dụng serializers để chuyển đổi giữa model và Json
-class QuyenS(serializers.ModelSerializer):
+class QuyenS(VietNamese, serializers.ModelSerializer):
     class Meta:
         model = Quyen
         fields = '__all__'
+
+    vi = {
+        "MaQuyen": "Mã quyền",
+        "TenQuyen": "Tên quyền"
+    }
+
+
 
 class NhanVienS(serializers.ModelSerializer):
     class Meta:
@@ -29,57 +36,17 @@ class TaiKhoanS(serializers.ModelSerializer):
         model = TaiKhoan
         fields = ['MaTK', 'TenDangNhap', 'MaNV', 'MaKH', 'MaQuyen']
 
-# Kiểm tra Quyền
-'''
-class Admin(permissions.BasePermission):
-    """Các trang chỉ Admin được truy cập"""
-    def has_permission(self, request, view):
-        # Kiểm tra có phải admin ko
-        return (request.user.is_authenticated and
-                (request.user.is_superuser or
-                 (request.user.MaQuyen and
-                request.user.MaQuyen.MaQuyen == 'ADMIN')))
 
-class AdminOrStaff(permissions.BasePermission):
-    """"Các trang admin và staff được truy cập"""
-    def has_permission(self, request, view):
-    # Kiểm tra có phải admin hoặc staff ko
-        return (request.user.is_authenticated and
-                (request.user.is_superuser or
-                request.user.MaQuyen and
-                (request.user.MaQuyen.MaQuyen == 'STAFF' or
-                 request.user.MaQuyen.MaQuyen == 'ADMIN')))
-
-
-class Customer(permissions.BasePermission):
-    """Các trang customer truy cập"""
-    def has_permission(self, request, view):
-        #Kiểm tra có phải customer ko
-        return (request.user.is_authenticated and
-                (request.user.is_superuser or
-                request.user.MaQuyen and
-                request.user.MaQuyen.MaQuyen == 'CUSTOMER'))
-'''
-
-class SuperUser(permissions.BasePermission):
-    """"Dành cho người có is_superuser=True"""
-    def has_permission(self, request, view):
-        return (request.user.is_authenticated and
-                request.user.is_superuser)
-
-# Hàm kiểm tra Quyền
-def check_Quyen(user, vai_tro):
-    return (
-        user.is_authenticated and
-        user.MaQuyen.MaQuyen and
-        user.MaQuyen.MaQuyen in vai_tro
-    )
-
-# Phân Quyền cho từng trang
-    """Admin đc truy cập"""
-class QuyenV(viewsets.ModelViewSet):
+class QuyenV(TimKiem,viewsets.ModelViewSet):
     queryset = Quyen.objects.all()
     serializer_class = QuyenS
+    lookup_field = 'MaQuyen'
+    search_fields = ['MaQuyen', 'TenQuyen']
+
+
+    # đổi tên tiêu đề
+    def get_view_name(self):
+        return "Danh sách quyền"
 
     def list(self, request, *args, **kwargs):
         """"không có Quyền Admin lỗi trang"""
@@ -88,9 +55,11 @@ class QuyenV(viewsets.ModelViewSet):
         return super(QuyenV, self).list(request, *args, **kwargs)
 
     """Admin đc truy cập"""
-class NhanVienV(viewsets.ModelViewSet):
+class NhanVienV(TimKiem, viewsets.ModelViewSet):
     queryset = NhanVien.objects.all()
     serializer_class = NhanVienS
+    lookup_field = 'MaNV'
+    search_fields = ['MaNV', 'TenNV','DiaChi','DienThoai']
     #permission_classes = [Admin]
 
     def list(self, request, *args, **kwargs):
@@ -100,10 +69,15 @@ class NhanVienV(viewsets.ModelViewSet):
         return super(NhanVienV, self).list(request, *args, **kwargs)
 
     """Admin và Saff đc truy cập"""
-class KhachHangV(viewsets.ModelViewSet):
+class KhachHangV(TimKiem, viewsets.ModelViewSet):
     queryset = KhachHang.objects.all()
     serializer_class = KhachHangS
+    lookup_field = 'MaKH'
+    search_fields = ['MaKH', 'TenKH', 'Email', 'DienThoai', 'DiaChi']
     #permission_classes = [AdminOrStaff]
+
+    def get_view_name(self):
+        return "Danh sách Khách hàng"
 
     def list(self, request, *args, **kwargs):
         """"không có Quyền Admin hoặc STAFF lỗi trang"""
@@ -123,17 +97,21 @@ class KhachHangV(viewsets.ModelViewSet):
             return Response({'Không có quyền thao tác '},status=status.HTTP_403_FORBIDDEN)
         return super(KhachHangV, self).update(request, args, kwargs)
 
-    """Chỉ admin mới có thể xóa sản phẩm"""
+    """Chỉ admin mới có thể xóa"""
     def destroy(self, request, *args, **kwargs):
         if not check_Quyen(request.user, ['ADMIN']):
             return Response({'Không có quyền thao tác '},status=status.HTTP_403_FORBIDDEN)
         return super(KhachHangV, self).destroy(request, args, kwargs)
 
     """Admin đc truy cập"""
-class TaiKhoanV(viewsets.ModelViewSet):
+class TaiKhoanV(TimKiem, viewsets.ModelViewSet):
     queryset = TaiKhoan.objects.all()
     serializer_class = TaiKhoanS
+    lookup_field = 'MaTK'
+    search_fields = ['MaQuyen__TenQuyen','TenDangNhap','MaTK']
     #permission_classes = [Admin]
+    def get_view_name(self):
+        return "Danh sách tài khoản"
 
     def list(self, request, *args, **kwargs):
         """"không có Quyền Admin lỗi trang"""
