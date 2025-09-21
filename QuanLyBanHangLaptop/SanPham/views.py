@@ -125,6 +125,7 @@ def them_san_pham(request):
 # Sửa sản phẩm
 @csrf_exempt # Bỏ kiểm tra CSRF khi gửi từ Postman
 def sua_san_pham(request):
+
     #1. Kiểm tra phương thức
     if request.method == "PUT":
         try:
@@ -419,14 +420,13 @@ class NhaCungCapS(serializers.ModelSerializer):
 class SanPhamV(viewsets.ModelViewSet):
     queryset = SanPham.objects.all()
     serializer_class = SanPhamS
-
     """Ai cũng xem đc danh sách sản phẩm"""
     def list(self, request, *args, **kwargs):
-        return super(SanPhamV, self).list(request, *args, **kwargs)
+        if request.user.is_anonymous:
+            return super().list(request, *args, **kwargs)
 
     def retrieve(self, request, *args, **kwargs):
         return super(SanPhamV, self).retrieve(request,*args, **kwargs)
-        return super(SanPhamV, self).list(request, args, kwargs)
 
 
     """Chỉ admin hoặc staff được phép xem xóa sửa"""

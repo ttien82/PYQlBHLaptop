@@ -82,7 +82,7 @@ Xóa	                PhieuNhap           DELETE	                /api/phieunhap/p
 
 Lấy danh sách       ChiTietPhieuNhap    GET	                    /api/phieunhap/chitietphieunhap/
 Thêm        	    ChiTietPhieuNhap    POST	                /api/phieunhap/chitietphieunhap/
-Lấy 1 theo MaCTPN   ChiTietPhieuNhap    Post/Get/Put/Delete     /api/phieunhap/chitietphieunhap/1
+Lấy 1 theo MaCTPN   ChiTietPhieuNhap    GET                     /api/phieunhap/chitietphieunhap/1
 Xem 1               ChiTietPhieuNhap    GET	                    /api/phieunhap/chitietphieunhap/get-by-mapn/PN001/
 Sửa	                ChiTietPhieuNhap    PUT	                    /api/phieunhap/chitietphieunhap/update/PN001/SP001
 Xóa_by_mapn_masp    ChiTietPhieuNhap    DELETE	                /api/phieunhap/chitietphieunhap/delete/PN001/SP001
@@ -97,7 +97,7 @@ Xóa	                DonHang             DELETE	                /api/hoadon/donh
 
 Lấy danh sách       ChiTietDonHang      GET	                    /api/hoadon/chitietdonhang/
 Thêm        	    ChiTietDonHang      POST	                /api/hoadon/chitietdonhang/
-Lấy 1 theo MaCTDH   ChiTietDonHang    Post/Get/Put/Delete       /api/hoadon/chitietdonhang/1
+Lấy 1 theo MaCTDH   ChiTietDonHang      GET                     /api/hoadon/chitietdonhang/1
 Xem 1               ChiTietDonHang      GET	                    /api/hoadon/chitietdonhang/get-by-madh/DH001/
 Sửa	                ChiTietDonHang      PUT	                    /api/hoadon/chitietdonhang/update/DH001/SP001/
 Xóa_by_madh_masp    ChiTietDonHang      DELETE	                /api/hoadon/chitietdonhang/delete/DH001/SP001/

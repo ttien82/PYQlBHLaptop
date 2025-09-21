@@ -1,7 +1,6 @@
 from rest_framework import serializers , viewsets, status
 from rest_framework.response import Response
 from .models import TaiKhoan, KhachHang, Quyen, NhanVien
-from django.db.models import Q
 from QuanLyBanHangLaptop.Ho_Tro import check_Quyen, TimKiem, VietNamese
 
 
@@ -18,23 +17,47 @@ class QuyenS(VietNamese, serializers.ModelSerializer):
 
 
 
-class NhanVienS(serializers.ModelSerializer):
+class NhanVienS(VietNamese, serializers.ModelSerializer):
     class Meta:
         model = NhanVien
         fields = '__all__'
 
-class KhachHangS(serializers.ModelSerializer):
+    vi = {
+        "MaNV": "Mã nhân viên",
+        "TenNV": "Tên nhân viên",
+        "DiaChi": "Địa chỉ nhân viên",
+        "DienThoai": "Điện thoại nhân viên"
+    }
+
+class KhachHangS(VietNamese, serializers.ModelSerializer):
     class Meta :
         model = KhachHang
         fields = '__all__'
 
-class TaiKhoanS(serializers.ModelSerializer):
+    vi = {
+        "MaKH": "Mã khách hàng",
+        "TenKH": "Tên khách hàng",
+        "DienThoai": "Điện thoại",
+        "Email": "Email",
+        "DiaChi": "Địa chỉ"
+    }
+
+class TaiKhoanS(VietNamese,serializers.ModelSerializer):
     MaQuyen = QuyenS(read_only=True)
     MaNV = NhanVienS(read_only=True)
     MaKH = KhachHangS(read_only=True)
     class Meta:
         model = TaiKhoan
         fields = ['MaTK', 'TenDangNhap', 'MaNV', 'MaKH', 'MaQuyen']
+
+    vi = {
+        "MaTK": "Mã tài khoản",
+        "MaNV": "Mã nhân viên",
+        "MaKH" : "Mã khách hàng",
+        "TenDangNhap": "Tên đăng nhập",
+        "MatKhau": "Mật khẩu",
+        "MaQuyen": "Mã quyền"
+    }
 
 
 class QuyenV(TimKiem,viewsets.ModelViewSet):
