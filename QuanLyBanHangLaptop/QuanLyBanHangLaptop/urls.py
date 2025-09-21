@@ -20,6 +20,7 @@ from django.urls import path, include
 from django.shortcuts import redirect
 
 urlpatterns = [
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('',lambda request: redirect('/admin/')), # thêm trang admin khi run
     path('admin/', admin.site.urls),
     path('api/taikhoan/', include('TaiKhoan.urls')),

@@ -8,6 +8,6 @@ router = DefaultRouter()
 router.register(r'quyen',QuyenV)
 router.register(r'nhanvien',NhanVienV)
 router.register(r'khachhang',KhachHangV)
-router.register(r'',TaiKhoanV,basename='taikhoan')
+router.register(r'',TaiKhoanV)
 
 urlpatterns = router.urls

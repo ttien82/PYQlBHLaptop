@@ -9,7 +9,6 @@ class DonHangViewSet(viewsets.ModelViewSet):
     queryset = DonHang.objects.all()
     serializer_class = DonHangSerializer
 
-
 class ChiTietDonHangViewSet(viewsets.ModelViewSet):
     queryset = ChiTietDonHang.objects.all()
     serializer_class = ChiTietDonHangSerializer

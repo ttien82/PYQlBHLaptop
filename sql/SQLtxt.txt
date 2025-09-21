@@ -1,472 +1,254 @@
-USE [master]
-GO
-/****** Object:  Database [QuanLyBanLaptopPY]    Script Date: 9/19/2025 2:22:41 AM ******/
-CREATE DATABASE [QuanLyBanLaptopPY]
- CONTAINMENT = NONE
- ON  PRIMARY
-( NAME = N'QuanLyBanLaptopPY', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.SQLEXPRESS\MSSQL\DATA\QuanLyBanLaptopPY.mdf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
- LOG ON
-( NAME = N'QuanLyBanLaptopPY_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.SQLEXPRESS\MSSQL\DATA\QuanLyBanLaptopPY_log.ldf' , SIZE = 8192KB , MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
- WITH CATALOG_COLLATION = DATABASE_DEFAULT, LEDGER = OFF
-GO
-ALTER DATABASE [QuanLyBanLaptopPY] SET COMPATIBILITY_LEVEL = 160
-GO
-IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
-begin
-EXEC [QuanLyBanLaptopPY].[dbo].[sp_fulltext_database] @action = 'enable'
-end
-GO
-ALTER DATABASE [QuanLyBanLaptopPY] SET ANSI_NULL_DEFAULT OFF
-GO
-ALTER DATABASE [QuanLyBanLaptopPY] SET ANSI_NULLS OFF
-GO
-ALTER DATABASE [QuanLyBanLaptopPY] SET ANSI_PADDING OFF
-GO
-ALTER DATABASE [QuanLyBanLaptopPY] SET ANSI_WARNINGS OFF
-GO
-ALTER DATABASE [QuanLyBanLaptopPY] SET ARITHABORT OFF
-GO
-ALTER DATABASE [QuanLyBanLaptopPY] SET AUTO_CLOSE ON
-GO
-ALTER DATABASE [QuanLyBanLaptopPY] SET AUTO_SHRINK OFF
-GO
-ALTER DATABASE [QuanLyBanLaptopPY] SET AUTO_UPDATE_STATISTICS ON
-GO
-ALTER DATABASE [QuanLyBanLaptopPY] SET CURSOR_CLOSE_ON_COMMIT OFF
-GO
-ALTER DATABASE [QuanLyBanLaptopPY] SET CURSOR_DEFAULT  GLOBAL
-GO
-ALTER DATABASE [QuanLyBanLaptopPY] SET CONCAT_NULL_YIELDS_NULL OFF
-GO
-ALTER DATABASE [QuanLyBanLaptopPY] SET NUMERIC_ROUNDABORT OFF
-GO
-ALTER DATABASE [QuanLyBanLaptopPY] SET QUOTED_IDENTIFIER OFF
-GO
-ALTER DATABASE [QuanLyBanLaptopPY] SET RECURSIVE_TRIGGERS OFF
-GO
-ALTER DATABASE [QuanLyBanLaptopPY] SET  ENABLE_BROKER
-GO
-ALTER DATABASE [QuanLyBanLaptopPY] SET AUTO_UPDATE_STATISTICS_ASYNC OFF
-GO
-ALTER DATABASE [QuanLyBanLaptopPY] SET DATE_CORRELATION_OPTIMIZATION OFF
-GO
-ALTER DATABASE [QuanLyBanLaptopPY] SET TRUSTWORTHY OFF
-GO
-ALTER DATABASE [QuanLyBanLaptopPY] SET ALLOW_SNAPSHOT_ISOLATION OFF
-GO
-ALTER DATABASE [QuanLyBanLaptopPY] SET PARAMETERIZATION SIMPLE
-GO
-ALTER DATABASE [QuanLyBanLaptopPY] SET READ_COMMITTED_SNAPSHOT OFF
-GO
-ALTER DATABASE [QuanLyBanLaptopPY] SET HONOR_BROKER_PRIORITY OFF
-GO
-ALTER DATABASE [QuanLyBanLaptopPY] SET RECOVERY SIMPLE
-GO
-ALTER DATABASE [QuanLyBanLaptopPY] SET  MULTI_USER
-GO
-ALTER DATABASE [QuanLyBanLaptopPY] SET PAGE_VERIFY CHECKSUM
-GO
-ALTER DATABASE [QuanLyBanLaptopPY] SET DB_CHAINING OFF
-GO
-ALTER DATABASE [QuanLyBanLaptopPY] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF )
-GO
-ALTER DATABASE [QuanLyBanLaptopPY] SET TARGET_RECOVERY_TIME = 60 SECONDS
-GO
-ALTER DATABASE [QuanLyBanLaptopPY] SET DELAYED_DURABILITY = DISABLED
-GO
-ALTER DATABASE [QuanLyBanLaptopPY] SET ACCELERATED_DATABASE_RECOVERY = OFF
-GO
-ALTER DATABASE [QuanLyBanLaptopPY] SET QUERY_STORE = ON
-GO
-ALTER DATABASE [QuanLyBanLaptopPY] SET QUERY_STORE (OPERATION_MODE = READ_WRITE, CLEANUP_POLICY = (STALE_QUERY_THRESHOLD_DAYS = 30), DATA_FLUSH_INTERVAL_SECONDS = 900, INTERVAL_LENGTH_MINUTES = 60, MAX_STORAGE_SIZE_MB = 1000, QUERY_CAPTURE_MODE = AUTO, SIZE_BASED_CLEANUP_MODE = AUTO, MAX_PLANS_PER_QUERY = 200, WAIT_STATS_CAPTURE_MODE = ON)
-GO
-USE [QuanLyBanLaptopPY]
-GO
-/****** Object:  Table [dbo].[ChiTietDonHang]    Script Date: 9/19/2025 2:22:41 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[ChiTietDonHang](
-	[MaDH] [varchar](20) NOT NULL,
-	[MaSP] [varchar](20) NOT NULL,
-	[SoLuong] [int] NOT NULL,
-	[DonGia] [decimal](18, 2) NOT NULL,
-	[MaCTDH] [int] IDENTITY(1,1) NOT NULL,
- CONSTRAINT [PK_ChiTietDonHang] PRIMARY KEY CLUSTERED
-(
-	[MaCTDH] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[ChiTietPhieuNhap]    Script Date: 9/19/2025 2:22:41 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[ChiTietPhieuNhap](
-	[MaPN] [varchar](20) NOT NULL,
-	[MaSP] [varchar](20) NOT NULL,
-	[SoLuong] [int] NOT NULL,
-	[GiaNhap] [decimal](18, 2) NOT NULL,
-	[MaCTPN] [int] IDENTITY(1,1) NOT NULL,
-PRIMARY KEY CLUSTERED
-(
-	[MaCTPN] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[DonHang]    Script Date: 9/19/2025 2:22:41 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[DonHang](
-	[MaDH] [varchar](20) NOT NULL,
-	[MaKH] [varchar](20) NULL,
-	[MaNV] [varchar](20) NOT NULL,
-	[NgayLap] [datetime] NOT NULL,
-	[TongTien] [decimal](18, 2) NOT NULL,
-	[TrangThai] [nvarchar](50) NOT NULL,
-PRIMARY KEY CLUSTERED
-(
-	[MaDH] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[KhachHang]    Script Date: 9/19/2025 2:22:41 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[KhachHang](
-	[MaKH] [varchar](20) NOT NULL,
-	[TenKH] [nvarchar](255) NOT NULL,
-	[DienThoai] [varchar](15) NULL,
-	[Email] [varchar](255) NULL,
-	[DiaChi] [nvarchar](255) NULL,
-PRIMARY KEY CLUSTERED
-(
-	[MaKH] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[LoaiSP]    Script Date: 9/19/2025 2:22:41 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[LoaiSP](
-	[MaLoaiSP] [varchar](20) NOT NULL,
-	[TenLoaiSP] [nvarchar](100) NOT NULL,
-PRIMARY KEY CLUSTERED
-(
-	[MaLoaiSP] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[NhaCungCap]    Script Date: 9/19/2025 2:22:41 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[NhaCungCap](
-	[MaNCC] [varchar](20) NOT NULL,
-	[TenNCC] [nvarchar](255) NOT NULL,
-	[DiaChi] [nvarchar](255) NULL,
-	[DienThoai] [varchar](15) NULL,
-PRIMARY KEY CLUSTERED
-(
-	[MaNCC] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[NhanVien]    Script Date: 9/19/2025 2:22:41 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[NhanVien](
-	[MaNV] [varchar](20) NOT NULL,
-	[TenNV] [nvarchar](255) NOT NULL,
-	[DiaChi] [nvarchar](255) NULL,
-	[DienThoai] [varchar](15) NULL,
-PRIMARY KEY CLUSTERED
-(
-	[MaNV] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[PhieuNhap]    Script Date: 9/19/2025 2:22:41 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[PhieuNhap](
-	[MaPN] [varchar](20) NOT NULL,
-	[MaNCC] [varchar](20) NOT NULL,
-	[MaNV] [varchar](20) NOT NULL,
-	[NgayNhap] [datetime] NOT NULL,
-	[TongTien] [decimal](18, 2) NOT NULL,
-PRIMARY KEY CLUSTERED
-(
-	[MaPN] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[Quyen]    Script Date: 9/19/2025 2:22:41 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[Quyen](
-	[MaQuyen] [varchar](20) NOT NULL,
-	[TenQuyen] [nvarchar](50) NOT NULL,
-PRIMARY KEY CLUSTERED
-(
-	[MaQuyen] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[SanPham]    Script Date: 9/19/2025 2:22:41 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[SanPham](
-	[MaSP] [varchar](20) NOT NULL,
-	[TenSP] [nvarchar](255) NOT NULL,
-	[MaNCC] [varchar](20) NOT NULL,
-	[MaLoaiSP] [varchar](20) NOT NULL,
-	[CPU] [nvarchar](100) NULL,
-	[Ram] [nvarchar](50) NULL,
-	[OCung] [nvarchar](50) NULL,
-	[CardManHinh] [nvarchar](100) NULL,
-	[GiaBan] [decimal](18, 2) NOT NULL,
-	[SoLuongTon] [int] NOT NULL,
-	[HinhAnh] [varchar](255) NULL,
-	[GiaNhap] [decimal](18, 2) NULL,
-	[Thue] [int] NOT NULL,
-	[LaiGop] [decimal](18, 2) NULL,
-PRIMARY KEY CLUSTERED
-(
-	[MaSP] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[TaiKhoan]    Script Date: 9/19/2025 2:22:41 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[TaiKhoan](
-	[id] [int] IDENTITY(1,1) NOT NULL,
-	[MaTK] [varchar](20) NOT NULL,
-	[MaNV] [varchar](20) NULL,
-	[MaKH] [varchar](20) NULL,
-	[TenDangNhap] [varchar](50) NOT NULL,
-	[password] [varchar](255) NOT NULL,
-	[MaQuyen] [varchar](20) NOT NULL,
-	[last_login] [datetime] NULL,
-	[is_active] [bit] NOT NULL,
-	[is_staff] [bit] NOT NULL,
-	[is_superuser] [bit] NOT NULL,
-PRIMARY KEY CLUSTERED
-(
-	[id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-SET IDENTITY_INSERT [dbo].[ChiTietDonHang] ON
-GO
-INSERT [dbo].[ChiTietDonHang] ([MaDH], [MaSP], [SoLuong], [DonGia], [MaCTDH]) VALUES (N'DH001', N'SP001', 1, CAST(35000000.00 AS Decimal(18, 2)), 1)
-GO
-INSERT [dbo].[ChiTietDonHang] ([MaDH], [MaSP], [SoLuong], [DonGia], [MaCTDH]) VALUES (N'DH002', N'SP002', 1, CAST(28000000.00 AS Decimal(18, 2)), 2)
-GO
-SET IDENTITY_INSERT [dbo].[ChiTietDonHang] OFF
-GO
-SET IDENTITY_INSERT [dbo].[ChiTietPhieuNhap] ON
-GO
-INSERT [dbo].[ChiTietPhieuNhap] ([MaPN], [MaSP], [SoLuong], [GiaNhap], [MaCTPN]) VALUES (N'PN001', N'SP001', 2, CAST(30000000.00 AS Decimal(18, 2)), 1)
-GO
-INSERT [dbo].[ChiTietPhieuNhap] ([MaPN], [MaSP], [SoLuong], [GiaNhap], [MaCTPN]) VALUES (N'PN002', N'SP002', 1, CAST(20000000.00 AS Decimal(18, 2)), 2)
-GO
-INSERT [dbo].[ChiTietPhieuNhap] ([MaPN], [MaSP], [SoLuong], [GiaNhap], [MaCTPN]) VALUES (N'PN002', N'SP004', 1, CAST(10000000.00 AS Decimal(18, 2)), 3)
-GO
-SET IDENTITY_INSERT [dbo].[ChiTietPhieuNhap] OFF
-GO
-INSERT [dbo].[DonHang] ([MaDH], [MaKH], [MaNV], [NgayLap], [TongTien], [TrangThai]) VALUES (N'DH001', N'KH001', N'NV003', CAST(N'2025-09-19T02:11:17.450' AS DateTime), CAST(35000000.00 AS Decimal(18, 2)), N'Đã thanh toán')
-GO
-INSERT [dbo].[DonHang] ([MaDH], [MaKH], [MaNV], [NgayLap], [TongTien], [TrangThai]) VALUES (N'DH002', N'KH002', N'NV003', CAST(N'2025-09-19T02:11:17.450' AS DateTime), CAST(28000000.00 AS Decimal(18, 2)), N'Đã thanh toán')
-GO
-INSERT [dbo].[KhachHang] ([MaKH], [TenKH], [DienThoai], [Email], [DiaChi]) VALUES (N'KH001', N'Nguyễn Văn A', N'0901112233', N'nguyenvana@gmail.com', N'101 Nguyễn Văn Cừ, Quận 5')
-GO
-INSERT [dbo].[KhachHang] ([MaKH], [TenKH], [DienThoai], [Email], [DiaChi]) VALUES (N'KH002', N'Trần Thị B', N'0988776655', N'tranthib@yahoo.com', N'202 Lê Lợi, Quận 1')
-GO
-INSERT [dbo].[KhachHang] ([MaKH], [TenKH], [DienThoai], [Email], [DiaChi]) VALUES (N'KH003', N'Lê Văn C', N'0912345678', N'levanc@hotmail.com', N'303 Cách Mạng Tháng Tám, Quận 3')
-GO
-INSERT [dbo].[LoaiSP] ([MaLoaiSP], [TenLoaiSP]) VALUES (N'LTCANHAN', N'Laptop Cá nhân')
-GO
-INSERT [dbo].[LoaiSP] ([MaLoaiSP], [TenLoaiSP]) VALUES (N'LTDOHOA', N'Laptop Đồ họa')
-GO
-INSERT [dbo].[LoaiSP] ([MaLoaiSP], [TenLoaiSP]) VALUES (N'LTGAMING', N'Laptop Gaming')
-GO
-INSERT [dbo].[LoaiSP] ([MaLoaiSP], [TenLoaiSP]) VALUES (N'LTOFFICE', N'Laptop Văn phòng')
-GO
-INSERT [dbo].[NhaCungCap] ([MaNCC], [TenNCC], [DiaChi], [DienThoai]) VALUES (N'NC001', N'Công ty TNHH Laptop An Phát', N'123 Lê Duẩn, TP.HCM', N'0901234567')
-GO
-INSERT [dbo].[NhaCungCap] ([MaNCC], [TenNCC], [DiaChi], [DienThoai]) VALUES (N'NC002', N'Nhà phân phối Hoàng Long', N'456 Trần Hưng Đạo, Hà Nội', N'0987654321')
-GO
-INSERT [dbo].[NhaCungCap] ([MaNCC], [TenNCC], [DiaChi], [DienThoai]) VALUES (N'NC003', N'Đại lý Laptop FPT', N'789 Nguyễn Trãi, Đà Nẵng', N'0912345678')
-GO
-INSERT [dbo].[NhanVien] ([MaNV], [TenNV], [DiaChi], [DienThoai]) VALUES (N'NV001', N'Mai Thị D', N'404 Võ Văn Tần, Quận 3', N'0909998877')
-GO
-INSERT [dbo].[NhanVien] ([MaNV], [TenNV], [DiaChi], [DienThoai]) VALUES (N'NV002', N'Phạm Văn E', N'505 Lý Thường Kiệt, Quận 10', N'0977665544')
-GO
-INSERT [dbo].[NhanVien] ([MaNV], [TenNV], [DiaChi], [DienThoai]) VALUES (N'NV003', N'Đỗ Thị F', N'606 Trần Phú, Quận 5', N'0966554433')
-GO
-INSERT [dbo].[PhieuNhap] ([MaPN], [MaNCC], [MaNV], [NgayNhap], [TongTien]) VALUES (N'PN001', N'NC001', N'NV002', CAST(N'2025-09-19T02:11:17.453' AS DateTime), CAST(60000000.00 AS Decimal(18, 2)))
-GO
-INSERT [dbo].[PhieuNhap] ([MaPN], [MaNCC], [MaNV], [NgayNhap], [TongTien]) VALUES (N'PN002', N'NC002', N'NV002', CAST(N'2025-09-19T02:11:17.453' AS DateTime), CAST(30000000.00 AS Decimal(18, 2)))
-GO
-INSERT [dbo].[Quyen] ([MaQuyen], [TenQuyen]) VALUES (N'ADMIN', N'Quản trị viên')
-GO
-INSERT [dbo].[Quyen] ([MaQuyen], [TenQuyen]) VALUES (N'CUSTOMER', N'Khách hàng')
-GO
-INSERT [dbo].[Quyen] ([MaQuyen], [TenQuyen]) VALUES (N'MANAGER', N'Quản lý')
-GO
-INSERT [dbo].[Quyen] ([MaQuyen], [TenQuyen]) VALUES (N'STAFF', N'Nhân viên bán hàng')
-GO
-INSERT [dbo].[SanPham] ([MaSP], [TenSP], [MaNCC], [MaLoaiSP], [CPU], [Ram], [OCung], [CardManHinh], [GiaBan], [SoLuongTon], [HinhAnh], [GiaNhap], [Thue], [LaiGop]) VALUES (N'SP001', N'ASUS ROG Strix G15', N'NC001', N'LTGAMING', N'Intel Core i7', N'16GB', N'512GB SSD', N'NVIDIA RTX 3060', CAST(35000000.00 AS Decimal(18, 2)), 15, N'asus_g15.jpg', CAST(0.00 AS Decimal(18, 2)), 0, CAST(0.00 AS Decimal(18, 2)))
-GO
-INSERT [dbo].[SanPham] ([MaSP], [TenSP], [MaNCC], [MaLoaiSP], [CPU], [Ram], [OCung], [CardManHinh], [GiaBan], [SoLuongTon], [HinhAnh], [GiaNhap], [Thue], [LaiGop]) VALUES (N'SP002', N'Dell XPS 13', N'NC002', N'LTOFFICE', N'Intel Core i5', N'8GB', N'256GB SSD', N'Intel Iris Xe Graphics', CAST(28000000.00 AS Decimal(18, 2)), 20, N'dell_xps13.jpg', CAST(0.00 AS Decimal(18, 2)), 0, CAST(0.00 AS Decimal(18, 2)))
-GO
-INSERT [dbo].[SanPham] ([MaSP], [TenSP], [MaNCC], [MaLoaiSP], [CPU], [Ram], [OCung], [CardManHinh], [GiaBan], [SoLuongTon], [HinhAnh], [GiaNhap], [Thue], [LaiGop]) VALUES (N'SP003', N'MacBook Pro M1', N'NC003', N'LTDOHOA', N'Apple M1', N'16GB', N'512GB SSD', N'Apple M1 GPU', CAST(45000000.00 AS Decimal(18, 2)), 10, N'macbook_pro.jpg', CAST(0.00 AS Decimal(18, 2)), 0, CAST(0.00 AS Decimal(18, 2)))
-GO
-INSERT [dbo].[SanPham] ([MaSP], [TenSP], [MaNCC], [MaLoaiSP], [CPU], [Ram], [OCung], [CardManHinh], [GiaBan], [SoLuongTon], [HinhAnh], [GiaNhap], [Thue], [LaiGop]) VALUES (N'SP004', N'Lenovo IdeaPad 5', N'NC002', N'LTCANHAN', N'AMD Ryzen 5', N'8GB', N'512GB SSD', N'AMD Radeon Graphics', CAST(15500000.00 AS Decimal(18, 2)), 30, N'lenovo_ideapad.jpg', CAST(0.00 AS Decimal(18, 2)), 0, CAST(0.00 AS Decimal(18, 2)))
-GO
-INSERT [dbo].[SanPham] ([MaSP], [TenSP], [MaNCC], [MaLoaiSP], [CPU], [Ram], [OCung], [CardManHinh], [GiaBan], [SoLuongTon], [HinhAnh], [GiaNhap], [Thue], [LaiGop]) VALUES (N'SP005', N'HP Spectre x360', N'NC001', N'LTOFFICE', N'Intel Core i7', N'16GB', N'1TB SSD', N'Intel Iris Xe Graphics', CAST(32000000.00 AS Decimal(18, 2)), 8, N'hp_spectre.jpg', CAST(0.00 AS Decimal(18, 2)), 0, CAST(0.00 AS Decimal(18, 2)))
-GO
-SET IDENTITY_INSERT [dbo].[TaiKhoan] ON
-GO
-INSERT [dbo].[TaiKhoan] ([id], [MaTK], [MaNV], [MaKH], [TenDangNhap], [password], [MaQuyen], [last_login], [is_active], [is_staff], [is_superuser]) VALUES (1, N'TK001', N'NV001', NULL, N'maid', N'pbkdf2_sha256$600000$W3PgD4pQmF3vLxvYjIUcA7$W+ouLKbz3ch8WxPhv6mA9zAvZsDScL9ivEQhL2wt7vA=', N'ADMIN', NULL, 1, 0, 1)
-GO
-INSERT [dbo].[TaiKhoan] ([id], [MaTK], [MaNV], [MaKH], [TenDangNhap], [password], [MaQuyen], [last_login], [is_active], [is_staff], [is_superuser]) VALUES (2, N'TK002', N'NV002', NULL, N'phame', N'pbkdf2_sha256$600000$zojq9Qhtf0AFeRCSPJvRk1$K1B5R6dW+KH+NNgqz5PzC1GTH39dW3m0xFl9G/6Z7HY=', N'MANAGER', NULL, 1, 0, 0)
-GO
-INSERT [dbo].[TaiKhoan] ([id], [MaTK], [MaNV], [MaKH], [TenDangNhap], [password], [MaQuyen], [last_login], [is_active], [is_staff], [is_superuser]) VALUES (3, N'TK003', N'NV003', NULL, N'dof', N'pbkdf2_sha256$600000$1tVMCyH6RZcv70T3P6LdnO$WnqCG7ECFbFwfxi8xgnPM9UbMqpCwaCDNndCtF6G5l8=', N'STAFF', NULL, 1, 0, 0)
-GO
-INSERT [dbo].[TaiKhoan] ([id], [MaTK], [MaNV], [MaKH], [TenDangNhap], [password], [MaQuyen], [last_login], [is_active], [is_staff], [is_superuser]) VALUES (4, N'TK004', NULL, N'KH001', N'ttien', N'pbkdf2_sha256$600000$YdJ5O4mTWuSlkP9T9P53Xy$gD1vdj8T84kW09dFf2q6E8wzB9nVbOCCx4YwJvKrDyA=', N'CUSTOMER', NULL, 1, 0, 0)
-GO
-SET IDENTITY_INSERT [dbo].[TaiKhoan] OFF
-GO
-SET ANSI_PADDING ON
-GO
-/****** Object:  Index [UQ__TaiKhoan__27250071C0226F20]    Script Date: 9/19/2025 2:22:41 AM ******/
-ALTER TABLE [dbo].[TaiKhoan] ADD UNIQUE NONCLUSTERED
-(
-	[MaTK] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-GO
-SET ANSI_PADDING ON
-GO
-/****** Object:  Index [UQ__TaiKhoan__55F68FC05E55839C]    Script Date: 9/19/2025 2:22:41 AM ******/
-ALTER TABLE [dbo].[TaiKhoan] ADD UNIQUE NONCLUSTERED
-(
-	[TenDangNhap] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-GO
-ALTER TABLE [dbo].[DonHang] ADD  DEFAULT (getdate()) FOR [NgayLap]
-GO
-ALTER TABLE [dbo].[PhieuNhap] ADD  DEFAULT (getdate()) FOR [NgayNhap]
-GO
-ALTER TABLE [dbo].[SanPham] ADD  DEFAULT ((0)) FOR [SoLuongTon]
-GO
-ALTER TABLE [dbo].[TaiKhoan] ADD  DEFAULT ((1)) FOR [is_active]
-GO
-ALTER TABLE [dbo].[TaiKhoan] ADD  DEFAULT ((0)) FOR [is_staff]
-GO
-ALTER TABLE [dbo].[TaiKhoan] ADD  DEFAULT ((0)) FOR [is_superuser]
-GO
-ALTER TABLE [dbo].[ChiTietDonHang]  WITH CHECK ADD  CONSTRAINT [FK__ChiTietDon__MaDH__5812160E] FOREIGN KEY([MaDH])
-REFERENCES [dbo].[DonHang] ([MaDH])
-GO
-ALTER TABLE [dbo].[ChiTietDonHang] CHECK CONSTRAINT [FK__ChiTietDon__MaDH__5812160E]
-GO
-ALTER TABLE [dbo].[ChiTietDonHang]  WITH CHECK ADD  CONSTRAINT [FK__ChiTietDon__MaSP__59063A47] FOREIGN KEY([MaSP])
-REFERENCES [dbo].[SanPham] ([MaSP])
-GO
-ALTER TABLE [dbo].[ChiTietDonHang] CHECK CONSTRAINT [FK__ChiTietDon__MaSP__59063A47]
-GO
-ALTER TABLE [dbo].[ChiTietPhieuNhap]  WITH CHECK ADD FOREIGN KEY([MaPN])
-REFERENCES [dbo].[PhieuNhap] ([MaPN])
-GO
-ALTER TABLE [dbo].[ChiTietPhieuNhap]  WITH CHECK ADD FOREIGN KEY([MaSP])
-REFERENCES [dbo].[SanPham] ([MaSP])
-GO
-ALTER TABLE [dbo].[DonHang]  WITH CHECK ADD FOREIGN KEY([MaKH])
-REFERENCES [dbo].[KhachHang] ([MaKH])
-GO
-ALTER TABLE [dbo].[DonHang]  WITH CHECK ADD FOREIGN KEY([MaNV])
-REFERENCES [dbo].[NhanVien] ([MaNV])
-GO
-ALTER TABLE [dbo].[PhieuNhap]  WITH CHECK ADD FOREIGN KEY([MaNCC])
-REFERENCES [dbo].[NhaCungCap] ([MaNCC])
-GO
-ALTER TABLE [dbo].[PhieuNhap]  WITH CHECK ADD FOREIGN KEY([MaNV])
-REFERENCES [dbo].[NhanVien] ([MaNV])
-GO
-ALTER TABLE [dbo].[SanPham]  WITH CHECK ADD FOREIGN KEY([MaLoaiSP])
-REFERENCES [dbo].[LoaiSP] ([MaLoaiSP])
-GO
-ALTER TABLE [dbo].[SanPham]  WITH CHECK ADD FOREIGN KEY([MaNCC])
-REFERENCES [dbo].[NhaCungCap] ([MaNCC])
-GO
-ALTER TABLE [dbo].[TaiKhoan]  WITH CHECK ADD FOREIGN KEY([MaKH])
-REFERENCES [dbo].[KhachHang] ([MaKH])
-GO
-ALTER TABLE [dbo].[TaiKhoan]  WITH CHECK ADD FOREIGN KEY([MaNV])
-REFERENCES [dbo].[NhanVien] ([MaNV])
-GO
-ALTER TABLE [dbo].[TaiKhoan]  WITH CHECK ADD FOREIGN KEY([MaQuyen])
-REFERENCES [dbo].[Quyen] ([MaQuyen])
-GO
-ALTER TABLE [dbo].[ChiTietDonHang]  WITH CHECK ADD  CONSTRAINT [CHK_DonGiaBan] CHECK  (([DonGia]>=(0)))
-GO
-ALTER TABLE [dbo].[ChiTietDonHang] CHECK CONSTRAINT [CHK_DonGiaBan]
-GO
-ALTER TABLE [dbo].[ChiTietDonHang]  WITH CHECK ADD  CONSTRAINT [CHK_SoLuongBan] CHECK  (([SoLuong]>(0)))
-GO
-ALTER TABLE [dbo].[ChiTietDonHang] CHECK CONSTRAINT [CHK_SoLuongBan]
-GO
-ALTER TABLE [dbo].[ChiTietPhieuNhap]  WITH CHECK ADD  CONSTRAINT [CHK_GiaNhap] CHECK  (([GiaNhap]>=(0)))
-GO
-ALTER TABLE [dbo].[ChiTietPhieuNhap] CHECK CONSTRAINT [CHK_GiaNhap]
-GO
-ALTER TABLE [dbo].[ChiTietPhieuNhap]  WITH CHECK ADD  CONSTRAINT [CHK_SoLuongNhap] CHECK  (([SoLuong]>(0)))
-GO
-ALTER TABLE [dbo].[ChiTietPhieuNhap] CHECK CONSTRAINT [CHK_SoLuongNhap]
-GO
-ALTER TABLE [dbo].[DonHang]  WITH CHECK ADD  CONSTRAINT [CHK_TongTienDH] CHECK  (([TongTien]>=(0)))
-GO
-ALTER TABLE [dbo].[DonHang] CHECK CONSTRAINT [CHK_TongTienDH]
-GO
-ALTER TABLE [dbo].[PhieuNhap]  WITH CHECK ADD  CONSTRAINT [CHK_TongTienPN] CHECK  (([TongTien]>=(0)))
-GO
-ALTER TABLE [dbo].[PhieuNhap] CHECK CONSTRAINT [CHK_TongTienPN]
-GO
-ALTER TABLE [dbo].[SanPham]  WITH CHECK ADD  CONSTRAINT [CHK_GiaBan] CHECK  (([GiaBan]>=(0)))
-GO
-ALTER TABLE [dbo].[SanPham] CHECK CONSTRAINT [CHK_GiaBan]
-GO
-ALTER TABLE [dbo].[SanPham]  WITH CHECK ADD  CONSTRAINT [CHK_SoLuongTon] CHECK  (([SoLuongTon]>=(0)))
-GO
-ALTER TABLE [dbo].[SanPham] CHECK CONSTRAINT [CHK_SoLuongTon]
-GO
-ALTER TABLE [dbo].[TaiKhoan]  WITH CHECK ADD  CONSTRAINT [CK_TaiKhoan_NhanVien_KhachHang] CHECK  (([MaNV] IS NOT NULL AND [MaKH] IS NULL OR [MaKH] IS NOT NULL AND [MaNV] IS NULL OR [MaNV] IS NULL AND [MaKH] IS NULL AND [is_superuser]=(1)))
-GO
-ALTER TABLE [dbo].[TaiKhoan] CHECK CONSTRAINT [CK_TaiKhoan_NhanVien_KhachHang]
-GO
-USE [master]
-GO
-ALTER DATABASE [QuanLyBanLaptopPY] SET  READ_WRITE
-GO
+
+-- Ngắt tất cả kết nối 
+ALTER DATABASE QuanLyBanLaptopPY
+SET SINGLE_USER
+WITH ROLLBACK IMMEDIATE;
+GO
+-- xóa 
+DROP DATABASE QuanLyBanLaptopPY;
+GO
+
+-- Tạo cơ sở dữ liệu mới
+CREATE DATABASE QuanLyBanLaptopPY;
+GO
+
+USE QuanLyBanLaptopPY;
+GO
+
+-- Bảng LoaiSP
+CREATE TABLE LoaiSP (
+    MaLoaiSP VARCHAR(20) PRIMARY KEY,
+    TenLoaiSP NVARCHAR(100) NOT NULL
+);
+
+-- Bảng NhaCungCap
+CREATE TABLE NhaCungCap (
+    MaNCC VARCHAR(20) PRIMARY KEY,
+    TenNCC NVARCHAR(255) NOT NULL,
+    DiaChi NVARCHAR(255),
+    DienThoai VARCHAR(15)
+);
+
+-- Bảng SanPham
+CREATE TABLE SanPham (
+    MaSP VARCHAR(20) PRIMARY KEY,
+    TenSP NVARCHAR(255) NOT NULL,
+    MaNCC VARCHAR(20) NOT NULL,
+    MaLoaiSP VARCHAR(20) NOT NULL,
+    CPU NVARCHAR(100),
+    Ram NVARCHAR(50),
+    OCung NVARCHAR(50),
+    CardManHinh NVARCHAR(100),
+    GiaBan DECIMAL(18, 2) NOT NULL,
+    SoLuongTon INT NOT NULL DEFAULT 0,
+    HinhAnh VARCHAR(255),
+    GiaNhap decimal(18, 2) NULL,
+	Thue int NOT NULL,
+	LaiGop decimal(18, 2) NULL,
+    
+    FOREIGN KEY (MaNCC) REFERENCES NhaCungCap(MaNCC),
+    FOREIGN KEY (MaLoaiSP) REFERENCES LoaiSP(MaLoaiSP),
+    CONSTRAINT CHK_GiaBan CHECK (GiaBan >= 0),
+    CONSTRAINT CHK_SoLuongTon CHECK (SoLuongTon >= 0)
+);
+
+-- Bảng KhachHang
+CREATE TABLE KhachHang (
+    MaKH VARCHAR(20) PRIMARY KEY,
+    TenKH NVARCHAR(255) NOT NULL,
+    DienThoai VARCHAR(15),
+    Email VARCHAR(255),
+    DiaChi NVARCHAR(255)
+);
+
+-- Bảng Quyen
+CREATE TABLE Quyen (
+    MaQuyen VARCHAR(20) PRIMARY KEY,
+    TenQuyen NVARCHAR(50) NOT NULL
+);
+
+-- Bảng NhanVien
+CREATE TABLE NhanVien (
+    MaNV VARCHAR(20) PRIMARY KEY,
+    TenNV NVARCHAR(255) NOT NULL,
+    DiaChi NVARCHAR(255),
+    DienThoai VARCHAR(15)
+);
+
+-- Bảng TaiKhoan
+CREATE TABLE TaiKhoan (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    MaTK VARCHAR(20) UNIQUE NOT NULL,
+    MaNV VARCHAR(20) NULL,
+    MaKH VARCHAR(20) NULL,
+    TenDangNhap VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    MaQuyen VARCHAR(20) NOT NULL,
+    last_login DATETIME,
+    is_active BIT NOT NULL DEFAULT 1,
+    is_staff BIT NOT NULL DEFAULT 0,
+    is_superuser BIT NOT NULL DEFAULT 0,
+    
+    FOREIGN KEY (MaNV) REFERENCES NhanVien(MaNV),
+    FOREIGN KEY (MaKH) REFERENCES KhachHang(MaKH),
+    FOREIGN KEY (MaQuyen) REFERENCES Quyen(MaQuyen),
+    CONSTRAINT CK_TaiKhoan_NhanVien_KhachHang CHECK (
+    (MaNV IS NOT NULL AND MaKH IS NULL) OR
+    (MaKH IS NOT NULL AND MaNV IS NULL) OR
+    (MaNV IS NULL AND MaKH IS NULL AND is_superuser = 1)
+    )
+
+);
+
+
+-- Bảng DonHang
+CREATE TABLE DonHang (
+    MaDH VARCHAR(20) PRIMARY KEY,
+    MaKH VARCHAR(20),
+    MaNV VARCHAR(20) NOT NULL,
+    NgayLap DATETIME NOT NULL DEFAULT GETDATE(),
+    TongTien DECIMAL(18, 2) NOT NULL,
+    TrangThai NVARCHAR(50) NOT NULL,
+    
+    FOREIGN KEY (MaKH) REFERENCES KhachHang(MaKH),
+    FOREIGN KEY (MaNV) REFERENCES NhanVien(MaNV),
+    CONSTRAINT CHK_TongTienDH CHECK (TongTien >= 0)
+);
+
+-- Bảng ChiTietDonHang
+CREATE TABLE ChiTietDonHang (
+    MaCTDH INT IDENTITY(1,1) PRIMARY KEY,
+    MaDH VARCHAR(20) NOT NULL,
+    MaSP VARCHAR(20) NOT NULL,
+    SoLuong INT NOT NULL,
+    DonGia DECIMAL(18, 2) NOT NULL,
+    
+    FOREIGN KEY (MaDH) REFERENCES DonHang(MaDH),
+    FOREIGN KEY (MaSP) REFERENCES SanPham(MaSP),
+    CONSTRAINT CHK_SoLuongBan CHECK (SoLuong > 0),
+    CONSTRAINT CHK_DonGiaBan CHECK (DonGia >= 0)
+);
+
+-- Bảng PhieuNhap
+CREATE TABLE PhieuNhap (
+    MaPN VARCHAR(20) PRIMARY KEY,
+    MaNCC VARCHAR(20) NOT NULL,
+    MaNV VARCHAR(20) NOT NULL,
+    NgayNhap DATETIME NOT NULL DEFAULT GETDATE(),
+    TongTien DECIMAL(18, 2) NOT NULL,
+    
+    FOREIGN KEY (MaNCC) REFERENCES NhaCungCap(MaNCC),
+    FOREIGN KEY (MaNV) REFERENCES NhanVien(MaNV),
+    CONSTRAINT CHK_TongTienPN CHECK (TongTien >= 0)
+);
+
+-- Bảng ChiTietPhieuNhap
+CREATE TABLE ChiTietPhieuNhap (
+    MaPN VARCHAR(20) NOT NULL,
+    MaSP VARCHAR(20) NOT NULL,
+    SoLuong INT NOT NULL,
+    GiaNhap DECIMAL(18, 2) NOT NULL,
+    MaCTPN INT IDENTITY(1,1) NOT NULL PRIMARY KEY
+
+    FOREIGN KEY (MaPN) REFERENCES PhieuNhap(MaPN),
+    FOREIGN KEY (MaSP) REFERENCES SanPham(MaSP),
+    CONSTRAINT CHK_SoLuongNhap CHECK (SoLuong > 0),
+    CONSTRAINT CHK_GiaNhap CHECK (GiaNhap >= 0)
+);
+
+-- Thêm dữ liệu vào bảng LoaiSP
+INSERT INTO LoaiSP (MaLoaiSP, TenLoaiSP) VALUES
+('LTGAMING', N'Laptop Gaming'),
+('LTOFFICE', N'Laptop Văn phòng'),
+('LTDOHOA', N'Laptop Đồ họa'),
+('LTCANHAN', N'Laptop Cá nhân');
+
+-- Thêm dữ liệu vào bảng NhaCungCap
+INSERT INTO NhaCungCap (MaNCC, TenNCC, DiaChi, DienThoai) VALUES
+('NC001', N'Công ty TNHH Laptop An Phát', N'123 Lê Duẩn, TP.HCM', '0901234567'),
+('NC002', N'Nhà phân phối Hoàng Long', N'456 Trần Hưng Đạo, Hà Nội', '0987654321'),
+('NC003', N'Đại lý Laptop FPT', N'789 Nguyễn Trãi, Đà Nẵng', '0912345678');
+
+-- Thêm dữ liệu vào bảng SanPham
+INSERT INTO SanPham (MaSP, TenSP, MaNCC, MaLoaiSP, CPU, Ram, OCung, CardManHinh, GiaBan, SoLuongTon, HinhAnh, GiaNhap, Thue, LaiGop) VALUES
+('SP001', N'ASUS ROG Strix G15', 'NC001', 'LTGAMING', 'Intel Core i7', '16GB', '512GB SSD', 'NVIDIA RTX 3060', 35000000.00, 15, 'asus_g15.jpg',0,0,0),
+('SP002', N'Dell XPS 13', 'NC002', 'LTOFFICE', 'Intel Core i5', '8GB', '256GB SSD', 'Intel Iris Xe Graphics', 28000000.00, 20, 'dell_xps13.jpg',0,0,0),
+('SP003', N'MacBook Pro M1', 'NC003', 'LTDOHOA', 'Apple M1', '16GB', '512GB SSD', 'Apple M1 GPU', 45000000.00, 10, 'macbook_pro.jpg',0,0,0),
+('SP004', N'Lenovo IdeaPad 5', 'NC002', 'LTCANHAN', 'AMD Ryzen 5', '8GB', '512GB SSD', 'AMD Radeon Graphics', 15500000.00, 30, 'lenovo_ideapad.jpg',0,0,0),
+('SP005', N'HP Spectre x360', 'NC001', 'LTOFFICE', 'Intel Core i7', '16GB', '1TB SSD', 'Intel Iris Xe Graphics', 32000000.00, 8, 'hp_spectre.jpg',0,0,0);
+
+-- Thêm dữ liệu vào bảng KhachHang
+INSERT INTO KhachHang (MaKH, TenKH, DienThoai, Email, DiaChi) VALUES
+('KH001', N'Nguyễn Văn A', '0901112233', 'nguyenvana@gmail.com', N'101 Nguyễn Văn Cừ, Quận 5'),
+('KH002', N'Trần Thị B', '0988776655', 'tranthib@yahoo.com', N'202 Lê Lợi, Quận 1'),
+('KH003', N'Lê Văn C', '0912345678', 'levanc@hotmail.com', N'303 Cách Mạng Tháng Tám, Quận 3');
+
+-- Thêm dữ liệu vào bảng NhanVien
+INSERT INTO NhanVien (MaNV, TenNV, DiaChi, DienThoai) VALUES
+('NV001', N'Mai Thị D', N'404 Võ Văn Tần, Quận 3', '0909998877'),
+('NV002', N'Phạm Văn E', N'505 Lý Thường Kiệt, Quận 10', '0977665544'),
+('NV003', N'Đỗ Thị F', N'606 Trần Phú, Quận 5', '0966554433');
+
+-- Thêm dữ liệu vào bảng Quyen
+INSERT INTO Quyen (MaQuyen, TenQuyen) VALUES
+('ADMIN', N'Quản trị viên'),
+('STAFF', N'Nhân viên bán hàng'),
+('CUSTOMER', N'Khách hàng');
+
+-- Thêm dữ liệu vào bảng TaiKhoan
+-- Nhân viên
+INSERT INTO TaiKhoan (MaTK, MaNV, MaKH, TenDangNhap, password, MaQuyen, is_superuser) VALUES
+('TK001', 'NV001', NULL, 'maid', 'pbkdf2_sha256$600000$W3PgD4pQmF3vLxvYjIUcA7$W+ouLKbz3ch8WxPhv6mA9zAvZsDScL9ivEQhL2wt7vA=', 'ADMIN', 1),
+('TK003', 'NV003', NULL, 'dof',   'pbkdf2_sha256$600000$1tVMCyH6RZcv70T3P6LdnO$WnqCG7ECFbFwfxi8xgnPM9UbMqpCwaCDNndCtF6G5l8=', 'STAFF', 0);
+
+-- Khách hàng
+INSERT INTO TaiKhoan (MaTK, MaNV, MaKH, TenDangNhap, password, MaQuyen, is_superuser) VALUES
+('TK004', NULL, 'KH001', 'ttien', 'pbkdf2_sha256$600000$YdJ5O4mTWuSlkP9T9P53Xy$gD1vdj8T84kW09dFf2q6E8wzB9nVbOCCx4YwJvKrDyA=', 'CUSTOMER', 0);
+
+
+-- Thêm dữ liệu vào bảng DonHang
+INSERT INTO DonHang (MaDH, MaKH, MaNV, NgayLap, TongTien, TrangThai) VALUES
+('DH001', 'KH001', 'NV003', GETDATE(), 35000000.00, N'Đã thanh toán'),
+('DH002', 'KH002', 'NV003', GETDATE(), 28000000.00, N'Đã thanh toán');
+
+-- Thêm dữ liệu vào bảng ChiTietDonHang
+INSERT INTO ChiTietDonHang (MaDH, MaSP, SoLuong, DonGia) VALUES
+('DH001', 'SP001', 1, 35000000.00),
+('DH002', 'SP002', 1, 28000000.00);
+
+-- Thêm dữ liệu vào bảng PhieuNhap
+INSERT INTO PhieuNhap (MaPN, MaNCC, MaNV, NgayNhap, TongTien) VALUES
+('PN001', 'NC001', 'NV002', GETDATE(), 60000000.00),
+('PN002', 'NC002', 'NV002', GETDATE(), 30000000.00);
+
+-- Thêm dữ liệu vào bảng ChiTietPhieuNhap
+INSERT INTO ChiTietPhieuNhap (MaPN, MaSP, SoLuong, GiaNhap) VALUES
+('PN001', 'SP001', 2, 30000000.00),
+('PN002', 'SP002', 1, 20000000.00),
+('PN002', 'SP004', 1, 10000000.00);
+
+-- Xem dữ liệu đã thêm 
+
+SELECT * FROM LoaiSP;
+
+SELECT * FROM NhaCungCap;
+
+SELECT * FROM SanPham;
+
+SELECT * FROM KhachHang;
+
+SELECT * FROM NhanVien;
+
+SELECT * FROM Quyen;
+
+SELECT * FROM TaiKhoan;
+
+SELECT * FROM DonHang;
+
+SELECT * FROM ChiTietDonHang;
+
+SELECT * FROM PhieuNhap;
+
+SELECT * FROM ChiTietPhieuNhap;
+
+

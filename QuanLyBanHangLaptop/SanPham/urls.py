@@ -1,7 +1,7 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 from rest_framework.routers import DefaultRouter
-
+'''
 urlpatterns = [
      path('', views.danh_sach_san_pham, name='danh_sach_san_pham'),
      path('them/', views.them_san_pham, name='them_san_pham'),
@@ -19,9 +19,10 @@ urlpatterns = [
      path('ncc/sua/', views.sua_ncc, name='sua_ncc'),
      path('ncc/xoa/', views.xoa_ncc, name='xoa_ncc'),
 
-]
+]'''
 router = DefaultRouter()
-urlpatterns += router.urls
+
 router.register(r'', views.SanPhamV,basename='sanpham')
-router.register(r'', views.NhaCungCapV,basename='ncc')
-router.register(r'',views.LoaiSPV,basename='loaisp')
+router.register(r'ncc', views.NhaCungCapV,basename='ncc')
+router.register(r'loaisp',views.LoaiSPV,basename='loaisp')
+urlpatterns = [path('', include(router.urls)),]

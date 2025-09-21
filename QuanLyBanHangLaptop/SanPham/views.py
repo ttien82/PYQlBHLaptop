@@ -2,15 +2,15 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.forms.models import model_to_dict
 from .models import SanPham, LoaiSP, NhaCungCap
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 from .LaiGop.GiaNhap import GiaNhap
 from .LaiGop.LaiGop import LaiGop
 import json
 from rest_framework.response import Response
 from rest_framework import viewsets, status
 from rest_framework import serializers
-from TaiKhoan.views import check_Quyen
-
+from QuanLyBanHangLaptop.Ho_Tro import check_Quyen, TimKiem, AllowListRetrieveAnyMixin,VietNamese
+'''
 # Tính giá nhập sản phẩm
 def tinh_gia_nhap(request):
     #1. Vào model lấy thông tin, lấy data
@@ -399,31 +399,67 @@ def xoa_ncc(request):
         except Exception as e:
             return JsonResponse({"success": False, "error": str(e)}, status=500)
 
-    return JsonResponse({"success": False, "error": "Phương thức không hợp lệ. Dùng DELETE."}, status=405)
+    return JsonResponse({"success": False, "error": "Phương thức không hợp lệ. Dùng DELETE."}, status=405)'''
 
-class SanPhamS(serializers.ModelSerializer):
+class SanPhamS(VietNamese,serializers.ModelSerializer):
     class Meta:
         model = SanPham
         fields = '__all__'
 
-class LoaiSPS(serializers.ModelSerializer):
+    vi = {
+        "MaSP": "Mã sản phẩm",
+        "TenSP": "Tên sản phẩm",
+        "MaLoaiSP": "Loại sản phẩm",
+        "MaNCC": "Nhà cung cấp",
+        "CPU": "CPU",
+        "RAM": "RAM",
+        "OCung": "Ổ cứng",
+        "CardManHinh": "Card màn hình",
+        "GiaBan": "Giá bán",
+        "Thue": "Thuế",
+        "SoLuongTon": "Số lượng tồn",
+        "HinhAnh": "Hình ảnh"
+    }
+
+class LoaiSPS(VietNamese,serializers.ModelSerializer):
     class Meta:
         model = LoaiSP
         fields = '__all__'
 
-class NhaCungCapS(serializers.ModelSerializer):
+    vi = {
+        "MaLoaiSP": "Mã loại sản phẩm",
+        "TenLoaiSP": "Tên loại sản phẩm"
+    }
+
+class NhaCungCapS(VietNamese,serializers.ModelSerializer):
     class Meta:
         model = NhaCungCap
         fields = '__all__'
 
+    vi = {
+        "MaNCC": "Mã nhà cung cấp",
+        "TenNCC": "Tên nhà cung cấp",
+        "DiaChi": "Địa chỉ",
+        "DienThoai": "Điện thoại"
+    }
+
     """Phân quyền cho sản phẩm"""
-class SanPhamV(viewsets.ModelViewSet):
+class SanPhamV(TimKiem,AllowListRetrieveAnyMixin,viewsets.ModelViewSet):
     queryset = SanPham.objects.all()
     serializer_class = SanPhamS
+    lookup_field = 'MaSP'
+    search_fields = ['MaSP', 'TenSP', 'MaLoaiSP__TenLoaiSP', 'MaNCC__TenNCC', 'CPU', 'RAM', 'OCung', 'CardManHinh']
+
+    def get_view_name(self):
+        return "Danh sách sản phẩm"
+
     """Ai cũng xem đc danh sách sản phẩm"""
     def list(self, request, *args, **kwargs):
         if request.user.is_anonymous:
-            return super().list(request, *args, **kwargs)
+            queryset = SanPham.objects.all()
+            serializer = SanPhamS(queryset, many=True)
+            return Response(serializer.data)
+        return super().list(request, *args, **kwargs)
 
     def retrieve(self, request, *args, **kwargs):
         return super(SanPhamV, self).retrieve(request,*args, **kwargs)
@@ -452,9 +488,14 @@ class SanPhamV(viewsets.ModelViewSet):
 
 
     """Phân quyền loại sp"""
-class LoaiSPV(viewsets.ModelViewSet):
+class LoaiSPV(TimKiem,viewsets.ModelViewSet):
     queryset = LoaiSP.objects.all()
     serializer_class = LoaiSPS
+    lookup_field = 'MaLoaiSP'
+    search_fields = ['MaLoaiSP', 'TenLoaiSP']
+
+    def get_view_name(self):
+        return "Danh sách loại sản phẩm"
 
     """Ai cũng xem đc danh sách"""
     def list(self, request, *args, **kwargs):
@@ -489,9 +530,14 @@ class LoaiSPV(viewsets.ModelViewSet):
 
 
 
-class NhaCungCapV(viewsets.ModelViewSet):
+class NhaCungCapV(TimKiem,viewsets.ModelViewSet):
     queryset = NhaCungCap.objects.all()
     serializer_class = NhaCungCapS
+    lookup_field = 'MaNCC'
+    search_fields = ['MaNCC', 'TenNCC', 'DiaChi', 'DienThoai']
+
+    def get_view_name(self):
+        return "Danh sách nhà cung cấp"
 
     """Chỉ admin hoặc staff được phép xem"""
     def list(self, request, *args, **kwargs):

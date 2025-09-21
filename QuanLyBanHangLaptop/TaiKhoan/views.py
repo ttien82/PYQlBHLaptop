@@ -1,8 +1,7 @@
-from rest_framework import serializers , viewsets, status
+from rest_framework import serializers , viewsets, status, filters
 from rest_framework.response import Response
 from .models import TaiKhoan, KhachHang, Quyen, NhanVien
-from QuanLyBanHangLaptop.Ho_Tro import check_Quyen, TimKiem, VietNamese
-
+from QuanLyBanHangLaptop.Ho_Tro import check_Quyen, TimKiem, TimKiem_tk, VietNamese
 
 # Sử dụng serializers để chuyển đổi giữa model và Json
 class QuyenS(VietNamese, serializers.ModelSerializer):
@@ -10,12 +9,11 @@ class QuyenS(VietNamese, serializers.ModelSerializer):
         model = Quyen
         fields = '__all__'
 
+    # dùng Tiếng Việt cho các định dạng
     vi = {
         "MaQuyen": "Mã quyền",
         "TenQuyen": "Tên quyền"
     }
-
-
 
 class NhanVienS(VietNamese, serializers.ModelSerializer):
     class Meta:
@@ -66,11 +64,11 @@ class QuyenV(TimKiem,viewsets.ModelViewSet):
     lookup_field = 'MaQuyen'
     search_fields = ['MaQuyen', 'TenQuyen']
 
-
     # đổi tên tiêu đề
     def get_view_name(self):
         return "Danh sách quyền"
 
+    # Phân quyền cho từng thao tác
     def list(self, request, *args, **kwargs):
         """"không có Quyền Admin lỗi trang"""
         if not check_Quyen(request.user, ['ADMIN']):
@@ -97,7 +95,6 @@ class KhachHangV(TimKiem, viewsets.ModelViewSet):
     serializer_class = KhachHangS
     lookup_field = 'MaKH'
     search_fields = ['MaKH', 'TenKH', 'Email', 'DienThoai', 'DiaChi']
-    #permission_classes = [AdminOrStaff]
 
     def get_view_name(self):
         return "Danh sách Khách hàng"
@@ -107,7 +104,6 @@ class KhachHangV(TimKiem, viewsets.ModelViewSet):
         if not check_Quyen(request.user, ['ADMIN','STAFF']):
             return Response({'Giới hạn quyền truy cập'},status=status.HTTP_403_FORBIDDEN)
         return super(KhachHangV, self).list(request, *args, **kwargs)
-
 
     """Chỉ admin hoặc staff được phép thêm sửa"""
     def create(self, request, *args, **kwargs):
@@ -127,7 +123,7 @@ class KhachHangV(TimKiem, viewsets.ModelViewSet):
         return super(KhachHangV, self).destroy(request, args, kwargs)
 
     """Admin đc truy cập"""
-class TaiKhoanV(TimKiem, viewsets.ModelViewSet):
+class TaiKhoanV(TimKiem_tk, viewsets.ModelViewSet):
     queryset = TaiKhoan.objects.all()
     serializer_class = TaiKhoanS
     lookup_field = 'MaTK'
@@ -136,9 +132,16 @@ class TaiKhoanV(TimKiem, viewsets.ModelViewSet):
     def get_view_name(self):
         return "Danh sách tài khoản"
 
-    def list(self, request, *args, **kwargs):
-        """"không có Quyền Admin lỗi trang"""
-        if not check_Quyen(request.user, ['ADMIN']):
-            return Response({'Giới hạn quyền truy cập'},status=status.HTTP_403_FORBIDDEN)
-        return super(TaiKhoanV, self).list(request, *args, **kwargs)
+    def get_queryset(self):
+        user = self.request.user
 
+        """"admin được xem toàn bộ, nv kh chỉ có thể xem tk của mình"""
+        if check_Quyen(user, ['ADMIN']):
+            # thêm điều kiện để tìm kiếm k xung đôt với phân quyền
+            tk = TaiKhoan.objects.all()
+        else:
+            tk = TaiKhoan.objects.filter(TenDangNhap=user.TenDangNhap)
+        return self.tim_kiem_tk(tk)
+
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)

@@ -93,10 +93,8 @@ class TaiKhoan(AbstractBaseUser, PermissionsMixin ):
     MaNV = models.ForeignKey(NhanVien, on_delete=models.SET_NULL, null=True, blank=True, db_column='MaNV')
     MaKH = models.ForeignKey(KhachHang, on_delete=models.SET_NULL, null=True, blank=True,db_column='MaKH')
     MaQuyen = models.ForeignKey(Quyen, on_delete=models.SET_NULL, null=True, blank=True,db_column='MaQuyen')
-    #TenQuyen = models.CharField(max_length=50,db_column='TenQuyen')
 
     # Tắt Many to Many của  PermissionsMixin
-
     groups = None
     user_permissions = None
 
@@ -105,9 +103,6 @@ class TaiKhoan(AbstractBaseUser, PermissionsMixin ):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
-
-    #groups = models.ManyToManyField('auth.Group', related_name='tai_khoan_groups', blank=True)
-    #user_permissions = models.ManyToManyField('auth.Permission', related_name='tai_khoan_permissions', blank=True)
 
     USERNAME_FIELD = 'TenDangNhap'
     REQUIRED_FIELDS = ['MaTK', 'MaQuyen']
@@ -121,7 +116,6 @@ class TaiKhoan(AbstractBaseUser, PermissionsMixin ):
         if self.is_superuser:
             return True
         return False
-
 
     objects = TaiKhoanManager()
 
@@ -141,8 +135,3 @@ class TaiKhoan(AbstractBaseUser, PermissionsMixin ):
                 name = 'CK_TaiKhoan_MaNV_MaKH'
             )
         ]
-    #def has_perm(self, perm, obj=None):
-        #return self.is_superuser
-
-    #def has_module_perms(self, app_label):
-        #return self.is_superuser
