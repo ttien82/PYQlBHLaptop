@@ -1,0 +1,19 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Django migrations (trừ file __init__.py)
+*/migrations/
+!*/migrations/__init__.py
+
+# Database
+*.sqlite3
+
+# Environment
+.env
+
+# IDE
+.vscode/
+.idea/
