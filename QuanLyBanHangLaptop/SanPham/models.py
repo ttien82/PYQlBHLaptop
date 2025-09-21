@@ -12,6 +12,7 @@ class LoaiSP(models.Model):
         return self.TenLoaiSP
 
     class Meta:
+        managed = False
         db_table = "LoaiSP"
         verbose_name = 'Loại sản phẩm'
         verbose_name_plural = 'Loại sản phẩm'
@@ -31,6 +32,7 @@ class NhaCungCap(models.Model):
         return self.TenNCC
 
     class Meta:
+        managed = False
         db_table = "NhaCungCap"
         verbose_name = 'Nhà cung cấp'
         verbose_name_plural = 'Nhà cung cấp'
@@ -67,6 +69,7 @@ class SanPham(models.Model):
         return self.TenSP
 
     class Meta:
+        managed = False
         db_table = "SanPham"
         verbose_name = 'Sản phẩm'
         verbose_name_plural = 'Sản phẩm'
@@ -95,6 +98,7 @@ class NhanVien(models.Model):
 
 # dùng meta để django đọc model Nhân Viên
     class Meta:
+        managed = False
         db_table = 'NhanVien'
         verbose_name='Nhân viên'
         verbose_name_plural='Danh sách nhân viên'
@@ -108,6 +112,7 @@ class PhieuNhap(models.Model):
     TongTien = models.DecimalField(max_digits=18, decimal_places=2)
 
     class Meta:
+        managed = False
         db_table = "PhieuNhap"
 
     def __str__(self):
@@ -130,6 +135,7 @@ class ChiTietPhieuNhap(models.Model):
     GiaNhap = models.DecimalField(max_digits=18, decimal_places=2)
 
     class Meta:
+        managed = False
         db_table = "ChiTietPhieuNhap"
         unique_together = (("MaPN", "MaSP"),)
 

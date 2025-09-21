@@ -14,6 +14,7 @@ class DonHang(models.Model):
 
     class Meta:
         db_table = 'DonHang'
+        managed = False
 
 
 class ChiTietDonHang(models.Model):
@@ -32,6 +33,7 @@ class ChiTietDonHang(models.Model):
     DonGia = models.DecimalField(max_digits=18, decimal_places=2)
 
     class Meta:
+        managed = False
         unique_together = ('MaDH', 'MaSP')
         db_table = 'ChiTietDonHang'
 
