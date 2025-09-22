@@ -4,14 +4,76 @@ from rest_framework.decorators import action
 from .models import DonHang, ChiTietDonHang
 from .serializers import DonHangSerializer, ChiTietDonHangSerializer
 from django.db.models import Sum
-
-class DonHangViewSet(viewsets.ModelViewSet):
+from QuanLyBanHangLaptop.Ho_Tro import check_Quyen,TimKiem_tk
+class DonHangViewSet(TimKiem_tk,viewsets.ModelViewSet):
     queryset = DonHang.objects.all()
     serializer_class = DonHangSerializer
+    lookup_field = 'MaDH'
+    search_fields = ['MaDH', 'MaKH__TenKH', 'NgayLap']
 
-class ChiTietDonHangViewSet(viewsets.ModelViewSet):
+    def get_view_name(self):
+        return "Danh sách đơn hàng"
+
+    def get_queryset(self):
+        user = self.request.user
+        if check_Quyen(user, ['ADMIN', 'STAFF']):
+            qs = DonHang.objects.all()
+        else:
+            qs = DonHang.objects.filter(MaKH=user.MaKH)
+        return self.tim_kiem_tk(qs)
+
+    # chỉ ADMIN và STAFF mới được tạo hóa đơn
+    def create(self, request, *args, **kwargs):
+        if not check_Quyen(request.user, ['ADMIN', 'STAFF']):
+            return Response({'Không có quyền thao tác'}, status=status.HTTP_403_FORBIDDEN)
+        return super().create(request, *args, **kwargs)
+
+    # chỉ ADMIN và STAFF mới được sửa hóa đơn
+    def update(self, request, *args, **kwargs):
+        if not check_Quyen(request.user, ['ADMIN', 'STAFF']):
+            return Response({'Không có quyền thao tác'}, status=status.HTTP_403_FORBIDDEN)
+        return super().update(request, *args, **kwargs)
+
+    # chỉ ADMIN được xóa
+    def destroy(self, request, *args, **kwargs):
+        if not check_Quyen(request.user, ['ADMIN']):
+            return Response({'Không có quyền thao tác'}, status=status.HTTP_403_FORBIDDEN)
+        return super().destroy(request, *args, **kwargs)
+
+class ChiTietDonHangViewSet(TimKiem_tk,viewsets.ModelViewSet):
     queryset = ChiTietDonHang.objects.all()
     serializer_class = ChiTietDonHangSerializer
+    lookup_field = 'MaCTHD'
+    search_fields = ['MaDH__MaKH__TenKH', 'MaSP__TenSP']
+
+    def get_view_name(self):
+        return "Chi tiết đơn hàng"
+
+    def get_queryset(self):
+        user = self.request.user
+        if check_Quyen(user, ['ADMIN', 'STAFF']):
+            qs = ChiTietDonHang.objects.all()
+        else:
+            qs = ChiTietDonHang.objects.filter(MaDH__MaKH=user.MaKH)
+        return self.tim_kiem_tk(qs)
+
+    # chỉ ADMIN và STAFF mới được thêm
+    def create(self, request, *args, **kwargs):
+        if not check_Quyen(request.user, ['ADMIN', 'STAFF']):
+            return Response({'Không có quyền thao tác'}, status=status.HTTP_403_FORBIDDEN)
+        return super().create(request, *args, **kwargs)
+
+    # chỉ ADMIN và STAFF mới được sửa
+    def update(self, request, *args, **kwargs):
+        if not check_Quyen(request.user, ['ADMIN', 'STAFF']):
+            return Response({'Không có quyền thao tác'}, status=status.HTTP_403_FORBIDDEN)
+        return super().update(request, *args, **kwargs)
+
+    # chỉ ADMIN được xóa
+    def destroy(self, request, *args, **kwargs):
+        if not check_Quyen(request.user, ['ADMIN']):
+            return Response({'Không có quyền thao tác'}, status=status.HTTP_403_FORBIDDEN)
+        return super().destroy(request, *args, **kwargs)
 
     # Lấy chi tiết theo MaDH
     @action(detail=False, methods=['get'], url_path='get-by-madh/(?P<madh>[^/.]+)')

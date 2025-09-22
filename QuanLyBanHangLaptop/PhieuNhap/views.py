@@ -5,18 +5,73 @@ from rest_framework.response import Response
 from .models import *
 from .serializers import PhieuNhapSerializer, ChiTietPhieuNhapSerializer
 from django.db.models import Sum
+from QuanLyBanHangLaptop.Ho_Tro import check_Quyen,TimKiem
 
-def PhieuNhap_view(request):
-    return JsonResponse({"PhieuNhap": "test"})
-
-
-class PhieuNhapViewSet(viewsets.ModelViewSet):
+class PhieuNhapViewSet(TimKiem,viewsets.ModelViewSet):
     queryset = PhieuNhap.objects.all()
     serializer_class = PhieuNhapSerializer
+    lookup_field = 'MaPN'
+    search_fields = ['MaPN', 'MaNCC__TenNCC', 'MaNV__TenNV']
+
+    def get_view_name(self):
+        return "Danh sách Phiếu nhập"
+
+    def list(self, request, *args, **kwargs):
+        """Chỉ ADMIN hoặc STAFF mới xem toàn bộ phiếu nhập"""
+        if not check_Quyen(request.user, ["ADMIN", "STAFF"]):
+            return Response({"error": "Giới hạn quyền truy cập"}, status=status.HTTP_403_FORBIDDEN)
+        return super().list(request, *args, **kwargs)
+
+    def create(self, request, *args, **kwargs):
+        """Chỉ ADMIN hoặc STAFF mới được tạo phiếu nhập"""
+        if not check_Quyen(request.user, ["ADMIN", "STAFF"]):
+            return Response({"error": "Không có quyền tạo phiếu nhập"}, status=status.HTTP_403_FORBIDDEN)
+        return super().create(request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        """Chỉ ADMIN hoặc STAFF được phép sửa"""
+        if not check_Quyen(request.user, ["ADMIN", "STAFF"]):
+            return Response({"error": "Không có quyền sửa phiếu nhập"}, status=status.HTTP_403_FORBIDDEN)
+        return super().update(request, *args, **kwargs)
+
+    def destroy(self, request, *args, **kwargs):
+        """Chỉ ADMIN mới được phép xoá"""
+        if not check_Quyen(request.user, ["ADMIN"]):
+            return Response({"error": "Không có quyền xoá phiếu nhập"}, status=status.HTTP_403_FORBIDDEN)
+        return super().destroy(request, *args, **kwargs)
 
 class ChiTietPhieuNhapViewSet(viewsets.ModelViewSet):
     queryset = ChiTietPhieuNhap.objects.all()
     serializer_class = ChiTietPhieuNhapSerializer
+    lookup_field = 'MaCTPN'
+    search_fields = ['MaCTPN', 'MaPN__MaPN', 'MaSP__TenSP']
+
+    def get_view_name(self):
+        return "Chi tiết Phiếu nhập"
+
+    def list(self, request, *args, **kwargs):
+        """ADMIN, STAFF được xem"""
+        if not check_Quyen(request.user, ["ADMIN", "STAFF"]):
+            return Response({"error": "Không có quyền truy cập"}, status=status.HTTP_403_FORBIDDEN)
+        return super().list(request, *args, **kwargs)
+
+    def create(self, request, *args, **kwargs):
+        """ADMIN, STAFF được thêm"""
+        if not check_Quyen(request.user, ["ADMIN", "STAFF"]):
+            return Response({"error": "Không có quyền thêm chi tiết"}, status=status.HTTP_403_FORBIDDEN)
+        return super().create(request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        """ADMIN, STAFF được sửa"""
+        if not check_Quyen(request.user, ["ADMIN", "STAFF"]):
+            return Response({"error": "Không có quyền sửa chi tiết"}, status=status.HTTP_403_FORBIDDEN)
+        return super().update(request, *args, **kwargs)
+
+    def destroy(self, request, *args, **kwargs):
+        """Chỉ ADMIN được xoá"""
+        if not check_Quyen(request.user, ["ADMIN"]):
+            return Response({"error": "Không có quyền xoá chi tiết"}, status=status.HTTP_403_FORBIDDEN)
+        return super().destroy(request, *args, **kwargs)
 
     @action(detail=False, methods=['get'], url_path='get-by-mapn/(?P<mapn>[^/.]+)')
     def get_by_mapn(self, request, mapn=None):

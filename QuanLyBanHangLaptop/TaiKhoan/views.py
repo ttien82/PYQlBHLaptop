@@ -81,7 +81,9 @@ class NhanVienV(TimKiem, viewsets.ModelViewSet):
     serializer_class = NhanVienS
     lookup_field = 'MaNV'
     search_fields = ['MaNV', 'TenNV','DiaChi','DienThoai']
-    #permission_classes = [Admin]
+
+    def get_view_name(self):
+        return "Danh sách nhân viên"
 
     def list(self, request, *args, **kwargs):
         """"không có Quyền Admin lỗi trang"""

@@ -1,7 +1,8 @@
 from django.contrib import admin
 from TaiKhoan.models import TaiKhoan, KhachHang, Quyen, NhanVien
-from SanPham.models import NhaCungCap, LoaiSP, SanPham, ChiTietPhieuNhap, PhieuNhap
+from SanPham.models import NhaCungCap, LoaiSP, SanPham
 from HoaDon.models import DonHang, ChiTietDonHang
+from PhieuNhap.models import PhieuNhap, ChiTietPhieuNhap
 
 
 admin.site.register(TaiKhoan)

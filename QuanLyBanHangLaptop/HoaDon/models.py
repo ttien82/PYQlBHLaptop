@@ -3,10 +3,11 @@ from SanPham.models import SanPham
 from django.db.models import Sum
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
+from TaiKhoan.models import KhachHang
 
 class DonHang(models.Model):
     MaDH = models.CharField(max_length=20, primary_key=True)
-    MaKH = models.CharField(max_length=20, null=True, blank=True)
+    MaKH = models.ForeignKey(KhachHang, on_delete=models.CASCADE,db_column='MaKH')
     MaNV = models.CharField(max_length=20)
     NgayLap = models.DateTimeField(auto_now_add=True)
     TongTien = models.DecimalField(max_digits=18, decimal_places=2)
